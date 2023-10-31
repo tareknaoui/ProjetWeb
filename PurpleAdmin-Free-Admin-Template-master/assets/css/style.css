@@ -13936,11 +13936,11 @@ dl {
           bottom: 5px;
           right: -5px; }
           .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img .availability-status.online {
-            background: #1bcfb4; }
+            background:  rgba(0, 131, 116, 0.8); }
           .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img .availability-status.offline {
-            background: #fe7c96; }
+            background:  rgba(0, 131, 116, 0.8); }
           .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img .availability-status.busy {
-            background: #fed713; }
+            background:  rgba(0, 131, 116, 0.8); }
       .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text {
         margin-left: 1.25rem; }
         .rtl .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text {
@@ -14107,7 +14107,7 @@ dl {
 /* Sidebar */
 .sidebar {
   min-height: calc(100vh - 70px);
-  background: #ffffff;
+  background: #fff;
   font-family: "ubuntu-regular", sans-serif;
   padding: 0;
   width: 260px;
@@ -14164,7 +14164,7 @@ dl {
             line-height: 1;
             font-size: 1.125rem;
             margin-left: auto;
-            color: #9e9da0; }
+            color:  rgba(0, 131, 116, 0.8); }
             .rtl .sidebar .nav .nav-item .nav-link i.menu-arrow {
               margin-left: 0;
               margin-right: auto; }
@@ -14189,14 +14189,14 @@ dl {
         .sidebar .nav .nav-item .nav-link[aria-expanded="true"] .menu-arrow:before {
           content: "\f140"; }
       .sidebar .nav .nav-item.active {
-        background: #ffffff; }
+        background:  rgba(0, 131, 116, 0.8); }
         .sidebar .nav .nav-item.active > .nav-link .menu-title {
-          color: #b66dff;
+          color:  rgba(0, 131, 116, 0.8);
           font-family: "ubuntu-medium", sans-serif; }
         .sidebar .nav .nav-item.active > .nav-link i {
-          color: #b66dff; }
+          color:  rgba(0, 131, 116, 0.8); }
       .sidebar .nav .nav-item:hover {
-        background: #fcfcfc; }
+        background:  rgba(0, 131, 116, 0.8); }
       .sidebar .nav .nav-item.nav-profile .nav-link {
         height: auto;
         line-height: 1;
@@ -14440,7 +14440,7 @@ dl {
       width: 100%; } }
 
 .content-wrapper {
-  background: #f2edf3;
+  background:  rgba(0, 131, 116, 0.8);
   padding: 2.75rem 2.25rem;
   width: 100%;
   -webkit-box-flex: 1;
