@@ -65,6 +65,11 @@ a:hover {
 h1,h2,h3,h4,h5,h6 {
 	margin: 0px;
 }
+/* Add this CSS code for your logo */
+
+
+
+
 
 p {
 	font-family: Poppins-Regular;
@@ -292,7 +297,7 @@ iframe {
   height: 100%;
   padding-left: 35px;
   pointer-events: none;
-  color: #666666;
+  color: #de3535;
 
   -webkit-transition: all 0.4s;
   -o-transition: all 0.4s;
@@ -457,3 +462,15 @@ iframe {
     opacity: 1;
   }
 }
+h2#logo {
+  font-family: "Your Beautiful Font Family", sans-serif; /* Replace with your chosen font */
+  font-size: 30px; /* Adjust the font size as needed */
+  background-color: black; /* Set the text color to black */
+  font-weight: bold; /* Make the text bold */
+  margin: 10px; /* Adjust the margins for positioning */
+  text-transform: uppercase; /* Optionally, apply uppercase text */
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+

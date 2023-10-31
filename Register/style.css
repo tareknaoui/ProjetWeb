@@ -147,3 +147,23 @@ form .user-details .input-box{
     flex-direction: column;
   }
 }
+#logo {
+  font-size: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  color: #000000;
+  cursor: pointer;
+  position: absolute; /* Position absolue par rapport au conteneur */
+  top: 20px; /* Position en haut */
+  left: 20px; /* Position à gauche */
+}
+#logo::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, rgba(0, 131, 116, 0.8), rgba(78, 195, 181, 0.8));
+}
