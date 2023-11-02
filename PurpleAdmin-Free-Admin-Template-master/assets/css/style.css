@@ -14453,7 +14453,6 @@ dl {
       width: 100%; } }
 
 .content-wrapper {
-<<<<<<< Updated upstream
         background: rgba(0, 131, 116, 0.8);
         padding: 2.75rem 2.25rem;
         width: 100%;
@@ -14462,18 +14461,6 @@ dl {
         align-items: center; /* Center vertically */
 }
 
-=======
-  background:  rgba(0, 131, 116, 0.8);
-  padding: 2.75rem 2.25rem;
-  width: 100%;
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1; }
-  .submenu > ul {
-    display: none;
-  }
-  
-  
-  
->>>>>>> Stashed changes
+.content-wrapper .content-wrapper {
+  padding: 0; }                                                          
 /*# sourceMappingURL=style.css.map */
