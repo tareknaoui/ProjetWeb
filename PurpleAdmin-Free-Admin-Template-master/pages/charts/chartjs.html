@@ -196,19 +196,19 @@
             
             <li class="nav-item">
               <a class="nav-link" href="../../pages/forms/basic_elements.html">
-                <span class="menu-title">Forms</span>
+                <span class="menu-title">Project Viewing Page</span>
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../pages/charts/chartjs.html">
-                <span class="menu-title">Charts</span>
+                <span class="menu-title">Topic Proposal Page</span>
                 <i class="mdi mdi-chart-bar menu-icon"></i>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../pages/tables/basic-table.html">
-                <span class="menu-title">Tables</span>
+                <span class="menu-title">Application Viewing</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
               </a>
             </li>
@@ -219,15 +219,7 @@
                   <h6 class="font-weight-normal mb-3">Projects</h6>
                 </div>
                 <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a project</button>
-                <div class="mt-4">
-                  <div class="border-bottom">
-                    <p class="text-secondary">Categories</p>
-                  </div>
-                  <ul class="gradient-bullet-list mt-4">
-                    <li>Free</li>
-                    <li>Pro</li>
-                  </ul>
-                </div>
+                
               </span>
             </li>
           </ul>
@@ -236,67 +228,70 @@
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title"> Chart-js </h3>
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Charts</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Chart-js</li>
-                </ol>
-              </nav>
-            </div>
-            <div class="row">
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Line chart</h4>
-                    <canvas id="lineChart" style="height:250px"></canvas>
+             
+              <div class="row">
+                <div class="col-12 grid-margin">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">My Topics</h4>
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th> List of Topics </th>
+                              <th> Topic Details </th>
+                              <th> Topic Status </th>
+                              <th> Proposal Period  </th>
+                              <th> Applications </th>
+                              
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                Web Development Project
+                              </td>
+                              <td> Create a web-based project management <br> application to streamline project <br> collaboration between supervisors  and students.</td>
+                              <td>
+                                <label class="badge badge-gradient-success">Taken</label>
+                              </td>
+                              <td> Dec 5, 2023 </td>
+                              <td> John Smith, Alice Johnson </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                Data Analysis for Healthcare
+                              </td>
+                              <td>Analyze healthcare data to identify trends <br>and insights for improved patient care.</td>
+                              <td>
+                                <label class="badge badge-danger">Available</label>
+                              </td>
+                              <td> Dec 12, 2023 </td>
+                              <td>  Sarah Brown, Mark Davis </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                Mobile App Development
+                              </td>
+                              <td> Develop a mobile app for managing tasks <br>and deadlines for academic projects.</td>
+                              <td>
+                                <label class="badge badge-gradient-success">Taken</label>
+                              </td>
+                              <td> Dec 16, 2023 </td>
+                              <td> Naoui Anis, Nemiri Yesmine </td>
+                            </tr>
+                             
+                          </tbody>
+                        </table>
+                        
+                      </div>
+                      <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a Topic</button>
+                      <button class="btn btn-danger btn-lg mt-4">Delete</button>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Bar chart</h4>
-                    <canvas id="barChart" style="height:230px"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Area chart</h4>
-                    <canvas id="areaChart" style="height:250px"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Doughnut chart</h4>
-                    <canvas id="doughnutChart" style="height:250px"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Pie chart</h4>
-                    <canvas id="pieChart" style="height:250px"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Scatter chart</h4>
-                    <canvas id="scatterChart" style="height:250px"></canvas>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
           <!-- content-wrapper ends -->
