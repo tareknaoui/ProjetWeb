@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -230,49 +231,117 @@
             <div class="page-header">
              
               <!-- Table displaying all projects -->
-              <h4 class="card-title">All Projects</h4>
-              <div class="table-responsive">
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th>Project Name</th>
-                              <th>Description</th>
-                              <th>Status</th>
-                              <th>Created On</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td><a href="project1.html">Project 1</a></td>
-                              <td>This is the description of Project 1.</td>
-                              <td><label class="badge badge-gradient-success">Active</label></td>
-                              <td>Oct 15, 2023</td>
-                          </tr>
-                          <tr>
-                              <td><a href="project2.html">Project 2</a></td>
-                              <td>This is the description of Project 2.</td>
-                              <td><label class="badge badge-danger">Inactive</label></td>
-                              <td>Nov 5, 2023</td>
-                          </tr>
-                          <!-- Ajoutez plus de lignes de projet au besoin -->
-                      </tbody>
-                  </table>
+              <div class="row">
+                <div class="col-12 grid-margin">
+                  <div class="card">
+                    <div class="card-body">
+
+                         
+                        <div class="container">
+                            <h1 class="project-title">Projet 1</h1>
+                            <section class="project-grid">
+                                <div class="grid-item">
+                                    <h2>Description du Projet</h2>
+                                    <p>Ceci est la description détaillée du Projet 1. Vous pouvez inclure toutes les informations pertinentes concernant le projet ici.</p>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>Membres du Projet</h2>
+                                    <ul class="project-members">
+                                        <li>Membre 1</li>
+                                        <li>Membre 2</li>
+                                        <li>Membre 3</li>
+                                        <!-- Ajoutez plus de membres au besoin -->
+                                    </ul>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>État du Projet</h2>
+                                    <p>En cours</p>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>Progression du Projet</h2>
+                                    <table class="project-progress-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tâche</th>
+                                                <th>État</th>
+                                                <th>Progression</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tâche 1</td>
+                                                <td>En cours</td>
+                                                <td>30%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tâche 2</td>
+                                                <td>Terminée</td>
+                                                <td>100%</td>
+                                            </tr>
+                                            <!-- Ajoutez plus de lignes de tâches au besoin -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Ajoutez d'autres éléments de grille au besoin -->
+                            </section>
+                        </div>                  
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-    <!-- Button to add a new project -->
-    <a href="../../pages/forms/AddProject.html">
-      <button class="btn btn-primary">Add Project</button>
-    </a>
-    
-</div>
 
                         
-                     
+            
+      
+                  
 
              </div>
-
            </div>
-
+           <style>
+           /* Styles pour la grille */
+           .project-grid {
+               display: grid;
+               grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+               gap: 20px;
+           }
+           
+           .grid-item {
+               padding: 20px;
+               border: 1px solid #ccc;
+               border-radius: 5px;
+               background-color: #fff;
+               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+           }
+           
+           /* Styles spécifiques aux éléments de grille */
+           .grid-item h2 {
+               font-size: 1.5rem;
+               color: #333;
+           }
+           
+           .project-members ul {
+               list-style-type: none;
+               padding: 0;
+           }
+           
+           .project-members li {
+               margin: 5px 0;
+               font-weight: bold;
+           }
+           
+           .project-progress-table {
+               width: 100%;
+               border-collapse: collapse;
+           }
+           
+           .project-progress-table th, .project-progress-table td {
+               padding: 10px;
+               text-align: left;
+               border-bottom: 1px solid #ccc;
+           }
+           </style>
           
           </div>
           <!-- content-wrapper ends -->

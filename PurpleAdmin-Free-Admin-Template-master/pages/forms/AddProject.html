@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,7 +10,7 @@
     <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
+    <!-- End Plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
@@ -194,75 +193,12 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="../../pages/forms/basic_elements.html">
-                <span class="menu-title">Projets</span>
-                <i class="mdi mdi-home menu-icon"></i>
+                <span class="menu-title">Project Viewing Page</span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
-              <img src="icon.png" id="icon" alt="Icône">
-              <div id="menu" style="display: none; position: relative; top: 10px;"> <!-- Ajout de position: relative; et top: 10px; -->
-                <ul>
-                  
-                  <li><a href="../../pages/forms/AddProject.html">Ajouter un projet</a></li>
-                </ul>
-                
-              </div>
-              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-              <script>
-                // Affiche ou cache le menu en fonction du clic sur l'icône
-                $("#icon").click(function() {
-                  $("#menu").fadeToggle();
-                });
-                // Ajoute des événements aux boutons du menu
-                $("#edit").click(function() {
-                  // Code pour modifier le projet sélectionné
-                });
-                $("#delete").click(function() {
-                  // Code pour supprimer le projet sélectionné
-                });
-                $("#share").click(function() {
-                  // Code pour partager le projet sélectionné
-                });
-              </script>
-            
-              <style>
-                li.nav-item {
-                  display: flex;
-                  align-items: center; /* aligne les éléments selon l'axe secondaire (vertical) */
-                  position: relative; /* définit le type de positionnement relatif pour le li */
-                }
-            
-                span.menu-title {
-                  margin-right: 10px; /* ajoute un espace entre le texte et l'icône */
-                }
-            
-                img#icon {
-                  position: absolute; /* définit le type de positionnement absolu pour l'icône */
-                  bottom: 0; /* place l'icône en bas du li */
-                  cursor: pointer; /* change le curseur en forme de main lors du survol de l'icône */
-                }
-            
-                div#menu {
-                  position: absolute; /* définit le type de positionnement absolu pour le menu */
-                  top: 100%; /* place le menu en dessous du li */
-                  left: 0; /* aligne le menu à gauche du li */
-                  width: 300px; /* définit la largeur du menu */
-                  padding: 10px; /* ajoute un espace interne au menu */
-                  background-color: #f0f0f0; /* change la couleur de fond du menu */
-                  border-radius: 10px; /* ajoute des coins arrondis au menu */
-                  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* ajoute une ombre au menu */
-                }
-            
-                ul {
-                  list-style-type: none; /* supprime les puces des éléments de liste */
-                  margin: 0; /* supprime les marges des éléments de liste */
-                  padding: 0; /* supprime les espaces internes des éléments de liste */
-                }
-            
-                li {
-                  margin-bottom: 5px; /* ajoute un espace entre les éléments de liste */
-                }
-              </style>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../pages/charts/chartjs.html">
@@ -270,8 +206,6 @@
                 <i class="mdi mdi-chart-bar menu-icon"></i>
               </a>
             </li>
-            
-               
             <li class="nav-item">
               <a class="nav-link" href="../../pages/tables/basic-table.html">
                 <span class="menu-title">Application Viewing</span>
@@ -285,21 +219,79 @@
                   <h6 class="font-weight-normal mb-3">Projects</h6>
                 </div>
                 <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a project</button>
-                <div class="mt-4">
-                  <div class="border-bottom">
-                    <p class="text-secondary">Categories</p>
-                  </div>
-                  <ul class="gradient-bullet-list mt-4">
-                    <li>Free</li>
-                    <li>Pro</li>
-                  </ul>
-                </div>
+                
               </span>
             </li>
           </ul>
         </nav>
         <!-- partial -->
-        
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+             
+              <!-- Table displaying all projects -->
+              <div class="row">
+                <div class="col-12 grid-margin">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">My Topics</h4>
+                     
+
+                          <div class="container">
+                              <h1 class="my-4">Add New Project</h1>
+                              <form action="process_project.php" method="POST">
+                                  <div class="form-group">
+                                      <label for="projectName">Project Name:</label>
+                                      <input type="text" class="form-control" id="projectName" name="projectName" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="projectDescription">Project Description:</label>
+                                      <textarea class="form-control" id="projectDescription" name="projectDescription" rows="4" required></textarea>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="projectTheme">Project Theme:</label>
+                                      <select class="form-control" id="projectTheme" name="projectTheme">
+                                          <option value="Web Development">Web Development</option>
+                                          <option value="Data Analysis">Data Analysis</option>
+                                          <option value="Mobile App Development">Mobile App Development</option>
+                                          <!-- Add more theme options as needed -->
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="projectMembers">Project Members:</label>
+                                      <select class="form-control" id="projectMembers" name="projectMembers[]" multiple>
+                                          <option value="John Smith">John Smith</option>
+                                          <option value="Alice Johnson">Alice Johnson</option>
+                                          <option value="Sarah Brown">Sarah Brown</option>
+                                          <option value="Mark Davis">Mark Davis</option>
+                                          <!-- Add more member options as needed -->
+                                      </select>
+                                  </div>
+                                  <button type="submit" class="btn btn-primary">Add Project</button>
+                              </form>
+                          </div>
+                   
+                      
+                     
+                                            
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                        
+            
+      
+                  
+
+             </div>
+
+           </div>
+
+          
+          </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
           <footer class="footer">
@@ -319,6 +311,7 @@
     <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
+    <script src="../../assets/vendors/chart.js/Chart.min.js"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
     <script src="../../assets/js/off-canvas.js"></script>
@@ -326,7 +319,7 @@
     <script src="../../assets/js/misc.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
-    <script src="../../assets/js/file-upload.js"></script>
+    <script src="../../assets/js/chart.js"></script>
     <!-- End custom js for this page -->
   </body>
-</html>  
+</html>
