@@ -297,7 +297,7 @@ iframe {
   height: 100%;
   padding-left: 35px;
   pointer-events: none;
-  color: #de3535;
+  color: #666666;
 
   -webkit-transition: all 0.4s;
   -o-transition: all 0.4s;
