@@ -1,9 +1,13 @@
-<!DOCTYPE html>
+<html>
+    <!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Tâches</title>
     <title>Purple Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../PurpleAdmin-Free-Admin-Template-master/assets/vendors/mdi/css/materialdesignicons.min.css">
@@ -15,11 +19,16 @@
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="../PurpleAdmin-Free-Admin-Template-master/assets/css/style.css">
+
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../PurpleAdmin-Free-Admin-Template-master/assets/images/favicon.ico" />
+
+    <!-- Inclure les fichiers CSS et JavaScript de FullCalendar -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   </head>
   <body>
-    
+
     <div class="container-scroller">
       <div class="row p-0 m-0 proBanner" id="proBanner">
         <div class="col-md-12 p-0 m-0">
@@ -230,7 +239,7 @@
 
             <li class="nav-item">
               <a class="nav-link" href="task.html">
-                <span class="menu-title">Gestion des Tâches</span>
+                <span class="menu-title">Task Progress</span>
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
             </li>
@@ -254,7 +263,7 @@
               <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
                   <i class="mdi mdi-home"></i>
-                </span> DashboardS
+                </span> Task Progress
                 
               </h3>
               <nav aria-label="breadcrumb">
@@ -266,8 +275,158 @@
               </nav>
             </div>
             
-      
-          </div>
+                
+            <div class="task-categories">
+                <div class="task-category" id="tasks-todo">
+                  <h3>Tasks to Do</h3>
+                  <div class="task-list">
+                    
+                    <!-- List of tasks to do -->
+                  </div>
+                </div>
+                <div class="task-category" id="tasks-in-progress">
+                  <h3>Tasks in Progress</h3>
+                  <div class="task-list">
+                    <!-- List of tasks in progress -->
+                  </div>
+                </div>
+                <div class="task-category" id="tasks-completed">
+                  <h3>Completed Tasks</h3>
+                  <div class="task-list">
+                    <!-- List of completed tasks -->
+                  </div>
+                </div>
+              </div>
+              
+              <div class="add-task">
+                <input type="text" id="task-title" placeholder="Task Title">
+                <input type="text" id="task-deadline" placeholder="Deadline">
+                <input type="range" id="task-progress" min="0" max="100" value="0">
+                <button id="add-task">Add Task</button>
+              </div>
+              
+              <script>
+              document.getElementById('add-task').addEventListener('click', function () {
+                var taskTitle = document.getElementById('task-title').value;
+                var taskDeadline = document.getElementById('task-deadline').value;
+                var taskProgress = document.getElementById('task-progress').value;
+              
+                var taskElement = document.createElement('div');
+                taskElement.classList.add('task');
+                taskElement.innerHTML = `<h4>${taskTitle}</h4><p>Deadline: ${taskDeadline}</p><p>Progress: ${taskProgress}%</p>`;
+                taskElement.innerHTML += '<input type="checkbox" class="task-checkbox">';
+              
+                if (taskProgress < 100) {
+                  document.getElementById('tasks-todo').querySelector('.task-list').appendChild(taskElement);
+                } else {
+                  document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
+                  taskElement.querySelector('.task-checkbox').checked = true;
+                }
+              
+                document.getElementById('task-title').value = '';
+                document.getElementById('task-deadline').value = '';
+                document.getElementById('task-progress').value = 0;
+              });
+              
+              document.addEventListener('change', function (event) {
+                if (event.target.classList.contains('task-checkbox')) {
+                  var taskElement = event.target.parentElement;
+                  var parentCategory = taskElement.parentElement.parentElement;
+              
+                  if (parentCategory.id === 'tasks-todo') {
+                    document.getElementById('tasks-in-progress').querySelector('.task-list').appendChild(taskElement);
+                  } else if (parentCategory.id === 'tasks-in-progress') {
+                    document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
+                  } else {
+                    event.target.checked = false;
+                  }
+                }
+              });
+              </script>
+              
+              <style>
+              .task-categories {
+                display: flex;
+                justify-content: space-between;
+              }
+              
+              .task-category {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin: 10px;
+              }
+              
+              .task-category h3 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+              }
+              
+              .task-list {
+                padding: 0;
+              }
+              
+              .task-list .task {
+                background: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin: 5px 0;
+                padding: 10px;
+                position: relative;
+              }
+              
+              .task-checkbox {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+              }
+              
+              .add-task {
+                margin: 20px 0;
+              }
+              
+              #task-progress {
+                width: 100%;
+              }
+              </style>
+              
+
+
+
+              <canvas id="taskProgressChart" width="400" height="200"></canvas>
+              <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                  var ctx = document.getElementById('taskProgressChart').getContext('2d');
+              
+                  var data = {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                      label: 'Progression des Tâches',
+                      data: [10, 20, 30, 40, 50, 60], // Remplacez ces données par les vôtres
+                      backgroundColor: 'rgba(75, 192, 192, 0.2)', // Couleur de remplissage
+                      borderColor: 'rgba(75, 192, 192, 1)', // Couleur de la bordure
+                      borderWidth: 1, // Largeur de la bordure
+                    }],
+                  };
+              
+                  var options = {
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        max: 100, // Plage de valeurs de 0 à 100 (ou ajustez selon vos besoins)
+                      },
+                    },
+                  };
+              
+                  var myChart = new Chart(ctx, {
+                    type: 'line', // Type de graphique (par exemple, 'line' pour un graphique en ligne)
+                    data: data,
+                    options: options,
+                  });
+                });
+              </script>
+              
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
           <footer class="footer">
@@ -300,4 +459,5 @@
     <script src="../PurpleAdmin-Free-Admin-Template-master/assets/js/todolist.js"></script>
     <!-- End custom js for this page -->
   </body>
+</html>
 </html>
