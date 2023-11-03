@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
+    <!-- End Plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
@@ -208,7 +209,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../pages/tables/basic-table.html">
-                <span class="menu-title">Candidate Viewing</span>
+                <span class="menu-title">Application Viewing</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
               </a>
             </li>
@@ -219,7 +220,7 @@
                   <h6 class="font-weight-normal mb-3">Projects</h6>
                 </div>
                 <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a project</button>
-             
+                
               </span>
             </li>
           </ul>
@@ -228,85 +229,120 @@
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-          
-          
-            </div>
-            <div class="row">
              
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card table-striped">
-                  <div class="card-body">
-                    <h4 class="card-title">Students:</h4>
-               
-                    </p>
-                    <table class="table table-striped wide-table">
-                      <thead>
-                        <tr>
-                          <th> User </th>
-                          <th> First name </th>
-                          <th> Major </th>
-                          <th> Project </th>
-                          <th> File </th>
-                          <Th>Accept</Th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                          </td>
-                          <td> Herman Basaesasck </td>
-                          <td>
-                            Computer Science
-                            
-                          </td>
-                          <td> Data Analysis for Healthcare</td>
-                          <td> 
-                              <a href="path_to_your_pdf_file.pdf" target="_blank" class="btn btn-primary">Open PDF</a>
-                          </td>
-                          <td><button type="button" class="btn btn-success">Accept </button>
-                            <button type="button" class="btn btn-danger">Decline</button></td>
-                        </tr>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                          </td>
-                          <td> Messsy Adam </td>
-                          <td>
-                            Computer Science
-                          </td>
-                          <td> Web Development Project </td>
-                          <td><a href="path_to_your_pdf_file.pdf" target="_blank" class="btn btn-primary">Open PDF</a> </td>
-                          <td><button type="button" class="btn btn-success">Accept </button>
-                            <button type="button" class="btn btn-danger">Decline</button></td>
-                        </tr>
-                        <tr>
-                          <td class="py-1">
-                            <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                          </td>
-                          <td> John Richards </td>
-                          <td>
-                            Computer Science
-                          </td>
-                          <td> Mobile App Development </td>
-                          <td> <a href="path_to_your_pdf_file.pdf" target="_blank" class="btn btn-primary">Open PDF</a></td>
-                          <td><button type="button" class="btn btn-success">Accept </button>
-                            <button type="button" class="btn btn-danger">Decline</button></td>
-                        </tr>
-                   
-                       
-                   
-                       
-                      </tbody>
-                    </table>
+              <!-- Table displaying all projects -->
+              <div class="row">
+                <div class="col-12 grid-margin">
+                  <div class="card">
+                    <div class="card-body">
+
+                         
+                        <div class="container">
+                            <h1 class="project-title">Projet 1</h1>
+                            <section class="project-grid">
+                                <div class="grid-item">
+                                    <h2>Description du Projet</h2>
+                                    <p>Ceci est la description détaillée du Projet 1. Vous pouvez inclure toutes les informations pertinentes concernant le projet ici.</p>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>Membres du Projet</h2>
+                                    <ul class="project-members">
+                                        <li>Membre 1</li>
+                                        <li>Membre 2</li>
+                                        <li>Membre 3</li>
+                                        <!-- Ajoutez plus de membres au besoin -->
+                                    </ul>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>État du Projet</h2>
+                                    <p>En cours</p>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>Progression du Projet</h2>
+                                    <table class="project-progress-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tâche</th>
+                                                <th>État</th>
+                                                <th>Progression</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tâche 1</td>
+                                                <td>En cours</td>
+                                                <td>30%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tâche 2</td>
+                                                <td>Terminée</td>
+                                                <td>100%</td>
+                                            </tr>
+                                            <!-- Ajoutez plus de lignes de tâches au besoin -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Ajoutez d'autres éléments de grille au besoin -->
+                            </section>
+                        </div>                  
+                        
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              
-               
-              
-             
-            </div>
+
+                        
+            
+      
+                  
+
+             </div>
+           </div>
+           <style>
+           /* Styles pour la grille */
+           .project-grid {
+               display: grid;
+               grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+               gap: 20px;
+           }
+           
+           .grid-item {
+               padding: 20px;
+               border: 1px solid #ccc;
+               border-radius: 5px;
+               background-color: #fff;
+               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+           }
+           
+           /* Styles spécifiques aux éléments de grille */
+           .grid-item h2 {
+               font-size: 1.5rem;
+               color: #333;
+           }
+           
+           .project-members ul {
+               list-style-type: none;
+               padding: 0;
+           }
+           
+           .project-members li {
+               margin: 5px 0;
+               font-weight: bold;
+           }
+           
+           .project-progress-table {
+               width: 100%;
+               border-collapse: collapse;
+           }
+           
+           .project-progress-table th, .project-progress-table td {
+               padding: 10px;
+               text-align: left;
+               border-bottom: 1px solid #ccc;
+           }
+           </style>
+          
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
@@ -327,6 +363,7 @@
     <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
+    <script src="../../assets/vendors/chart.js/Chart.min.js"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
     <script src="../../assets/js/off-canvas.js"></script>
@@ -334,6 +371,7 @@
     <script src="../../assets/js/misc.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
+    <script src="../../assets/js/chart.js"></script>
     <!-- End custom js for this page -->
   </body>
 </html>
