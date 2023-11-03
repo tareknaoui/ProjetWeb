@@ -2275,6 +2275,39 @@ progress {
   margin-top: calc(-1 * var(--bs-gutter-y));
   margin-right: calc(-.5 * var(--bs-gutter-x));
   margin-left: calc(-.5 * var(--bs-gutter-x)); }
+  .rowDash {
+    --bs-gutter-x: 40px;
+    --bs-gutter-y: 0;
+    display: flex;  
+    position: relative;
+    
+    background-color: #000; 
+    width: 50%  ;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+    margin-left: calc(-.5 * var(--bs-gutter-x)); }
+    .rowDash2 {
+      --bs-gutter-x: 40px;
+      --bs-gutter-y: 0;
+      display: flex;  
+      position: relative;
+      width: 25%  ;
+      
+      background-color: #000;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-top: calc(-1 * var(--bs-gutter-y));
+      margin-right: calc(-.5 * var(--bs-gutter-x));
+      margin-left: calc(-.5 * var(--bs-gutter-x)); }
+  
   .row > * {
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -3365,6 +3398,29 @@ progress {
 .table-borderless > :not(:first-child) {
   border-top-width: 0; }
 
+.card .table-striped
+{
+  
+  position: relative;
+  bottom: auto;
+  width: 100%;
+  
+  
+}
+.row{
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+
+  
+}
+.card 
+{
+  position: relative;
+
+  bottom: 22px;
+}
 .table-striped > tbody > tr:nth-of-type(odd) > * {
   --bs-table-accent-bg: var(--bs-table-striped-bg);
   color: var(--bs-table-striped-color); }
@@ -3464,6 +3520,7 @@ progress {
   --bs-table-hover-color: #fff;
   color: #fff;
   border-color: #373b3e; }
+
 
 .table-responsive {
   overflow-x: auto;
@@ -5676,8 +5733,11 @@ textarea.form-control-lg {
   .navbar-dark .navbar-text a:focus {
     color: #fff; }
 
-.card {
-  max-width: 800px;
+.card  {
+  width: 134%;
+  height: 120%;
+  
+  box-sizing: border-box;
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -14456,8 +14516,10 @@ dl {
         background: rgba(0, 131, 116, 0.8);
         padding: 2.75rem 2.25rem;
         width: 100%;
-        display: flex; /* Use flexbox to center the table */
-        justify-content: center; /* Center horizontally */
+       
+        
+        display: block; /* Use flexbox to center the table */
+        justify-content: start; /* Center horizontally */
         align-items: center; /* Center vertically */
 }
 
