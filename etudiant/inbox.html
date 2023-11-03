@@ -244,8 +244,8 @@
             <div class="page-header">
               <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
-                  <i class="mdi mdi-home"></i>
-                </span> DashboardS
+                  <i class="mdi mdi-settings"></i>
+                </span> Topic exploration
                 
               </h3>
               <nav aria-label="breadcrumb">
@@ -256,17 +256,113 @@
                 </ul>
               </nav>
             </div>
+            <div class="row">
+                   
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card table-striped">
+                      <div class="card-body">
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject font-weight-normal mb-1">Launch Admin</h6>
+                              <p class="text-gray ellipsis mb-0"> New admin wow! </p>
+                              <button class="btn btn-danger" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
+  
+  
+                            </div>
+                  
+                            
+                          
+  
+                          
+  
+  
+  
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 grid-margin stretch-card">
+                      <div class="card table-striped">
+                        <div class="card-body">
+                            <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                                <h6 class="preview-subject font-weight-normal mb-1">Naoui Anis</h6>
+                                <p class="text-gray ellipsis mb-0"> Send a message</p>
+                                <button class="btn btn-danger" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
+  
+                              
+  
+                              </div>
+                    
+                              
+                            
+    
+                            
+    
+    
+    
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12 grid-margin stretch-card">
+                      <div class="card table-striped">
+                        <div class="card-body">
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject font-weight-normal mb-1">Nemiri Yesmine</h6>
+                              <p class="text-gray ellipsis mb-0"> Joined the project </p>
+                              <button class="btn btn-danger ml-auto" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
+                          </div>
+                    
+                              
+                            
+    
+                            
+    
+    
+    
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12 grid-margin stretch-card">
+                      <div class="card table-striped">
+                        <div class="card-body">
+                            <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                                  <h6 class="preview-subject font-weight-normal mb-1">Samir Salim</h6>
+                                  <p class="text-gray ellipsis mb-0"> Added a file</p>
+                                  <button class="btn btn-danger" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
+  
+                                
+                                  
+                                
+  
+  
+                              </div>
+                    
+                              
+                            
+    
+                            
+    
+    
+    
+                        </div>
+                      </div>
+                    </div>
+                  
+              </div>
+            
+          
+                
+            
+               
+                  
+                     
+                    
+                   
+                 
             
       
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
-          <footer class="footer">
-            <div class="container-fluid d-flex justify-content-between">
-              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
-              <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
-            </div>
-          </footer>
+          
           <!-- partial -->
         </div>
         <!-- main-panel ends -->
@@ -290,5 +386,31 @@
     <script src="../PurpleAdmin-Free-Admin-Template-master/assets/js/dashboard.js"></script>
     <script src="../PurpleAdmin-Free-Admin-Template-master/assets/js/todolist.js"></script>
     <!-- End custom js for this page -->
-  </body>
+    <style>
+        .btn btn-danger
+        {
+            background-color: aqua;
+            width: 200px;
+            position: relative;
+            left: 100px;
+        }
+    </style>
+   <script>
+// JavaScript
+document.querySelectorAll('.btn-danger').forEach(function(button) {
+  button.addEventListener('click', function() {
+    // Remove the element
+    this.closest('.col-lg-12.grid-margin.stretch-card').remove();
+
+    // Check if there are any elements left
+    var elements = document.querySelectorAll('.col-lg-12.grid-margin.stretch-card');
+    if (elements.length === 0) {
+      var message = document.createElement('p');
+      message.textContent = 'No inbox message for now';
+      document.querySelector('.content-wrapper').appendChild(message);
+    }
+  });
+});
+    </script>
+</body>
 </html>
