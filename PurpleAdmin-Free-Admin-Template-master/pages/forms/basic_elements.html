@@ -193,13 +193,21 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-            
             <li class="nav-item">
-              <a class="nav-link" href="../../pages/forms/basic_elements.html">
-                <span class="menu-title">Project Viewing Page</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+                <span class="menu-title">Project </span>
+                <i class="menu-arrow"></i>
+                <i class="mdi mdi-medical-bag menu-icon"></i>
               </a>
+              <div class="collapse" id="general-pages">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="../../pages/forms/AddProject.html"> Add Project </a></li>
+                  <li class="nav-item"> <a class="nav-link" href="../../pages/forms/AllProject.html"> All Project </a></li>
+
+                </ul>
+              </div>
             </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="../../pages/charts/chartjs.html">
                 <span class="menu-title">Topic Proposal Page</span>
@@ -218,7 +226,6 @@
                 <div class="border-bottom">
                   <h6 class="font-weight-normal mb-3">Projects</h6>
                 </div>
-                <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a project</button>
                 
               </span>
             </li>
@@ -236,42 +243,13 @@
                   <div class="card-body">
                     <h4 class="card-title">My Topics</h4>
                    
-                    <div class="table-responsive">
-                      <table class="table">
-                          <thead>
-                              <tr>
-                                  <th>Project Name</th>
-                                  <th>Description</th>
-                                  <th>Status</th>
-                                  <th>Created On</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr>
-                                  <td><a href="project1.html">Project 1</a></td>
-                                  <td>This is the description of Project 1.</td>
-                                  <td><label class="badge badge-gradient-success">Active</label></td>
-                                  <td>Oct 15, 2023</td>
-                              </tr>
-                              <tr>
-                                  <td><a href="project2.html">Project 2</a></td>
-                                  <td>This is the description of Project 2.</td>
-                                  <td><label class="badge badge-danger">Inactive</label></td>
-                                  <td>Nov 5, 2023</td>
-                              </tr>
-                              <!-- Ajoutez plus de lignes de projet au besoin -->
-                          </tbody>
-                      </table>
+                      
                       <!-- Bouton "Add Project" en bas du tableau -->
-                      <a href="../../pages/forms/AddProject.html">
-                          <button class="btn btn-primary">Add Project</button>
-                      </a>
-                  </div>
+                      
                     
                    
                                           
                       
-                    </div>
                   </div>
                 </div>
               </div>
