@@ -1,9 +1,13 @@
-<!DOCTYPE html>
+<html>
+    <!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Tâches</title>
     <title>Purple Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../PurpleAdmin-Free-Admin-Template-master/assets/vendors/mdi/css/materialdesignicons.min.css">
@@ -15,10 +19,16 @@
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="../PurpleAdmin-Free-Admin-Template-master/assets/css/style.css">
+
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../PurpleAdmin-Free-Admin-Template-master/assets/images/favicon.ico" />
+
+    <!-- Inclure les fichiers CSS et JavaScript de FullCalendar -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   </head>
   <body>
+
     <div class="container-scroller">
       <div class="row p-0 m-0 proBanner" id="proBanner">
         <div class="col-md-12 p-0 m-0">
@@ -226,12 +236,15 @@
                 <i class="mdi mdi-email-outline menu-icon"></i>
               </a>
             </li>
+
             <li class="nav-item">
               <a class="nav-link" href="task.html">
-                <span class="menu-title">Project Progress</span>
+                <span class="menu-title">Project Progress </span>
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
             </li>
+            
+    
             <li class="nav-item sidebar-actions">
               <span class="nav-link">
                 <div class="border-bottom">
@@ -249,8 +262,8 @@
             <div class="page-header">
               <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
-                  <i class="mdi mdi-settings"></i>
-                </span> Topic exploration
+                  <i class="mdi mdi-home"></i>
+                </span> Task Progress
                 
               </h3>
               <nav aria-label="breadcrumb">
@@ -261,113 +274,147 @@
                 </ul>
               </nav>
             </div>
-            <div class="row">
-                   
-                <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card table-striped">
-                      <div class="card-body">
-                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject font-weight-normal mb-1">Launch Admin</h6>
-                              <p class="text-gray ellipsis mb-0"> New admin wow! </p>
-                              <button class="btn btn-danger" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
-  
-  
-                            </div>
-                  
-                            
-                          
-  
-                          
-  
-  
-  
+            
+                
+          
+              <div class="task-categories">
+                  <div class="task-category" id="tasks-todo">
+                    <h3>Tasks to Do</h3>
+                    <div class="task-list">
+                      <!-- List of tasks to do -->
+                      <div class="task">
+                        <h4>Dormir</h4>
+                        <p>Deadline: 12-sep</p>
+                        <input type="checkbox" class="task-anis">
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-12 grid-margin stretch-card">
-                      <div class="card table-striped">
-                        <div class="card-body">
-                            <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                                <h6 class="preview-subject font-weight-normal mb-1">Naoui Anis</h6>
-                                <p class="text-gray ellipsis mb-0"> Send a message</p>
-                                <button class="btn btn-danger" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
-  
-                              
-  
-                              </div>
-                    
-                              
-                            
-    
-                            
-    
-    
-    
-                        </div>
-                      </div>
+                  <div class="task-category" id="tasks-in-progress">
+                    <h3>Tasks in Progress</h3>
+                    <div class="task-list">
+                      <!-- List of tasks in progress -->
                     </div>
-                    <div class="col-lg-12 grid-margin stretch-card">
-                      <div class="card table-striped">
-                        <div class="card-body">
-                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject font-weight-normal mb-1">Nemiri Yesmine</h6>
-                              <p class="text-gray ellipsis mb-0"> Joined the project </p>
-                              <button class="btn btn-danger ml-auto" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
-                          </div>
-                    
-                              
-                            
-    
-                            
-    
-    
-    
-                        </div>
-                      </div>
+                  </div>
+                  <div class="task-category" id="tasks-completed">
+                    <h3>Completed Tasks</h3>
+                    <div class="task-list">
+                      <!-- List of completed tasks -->
                     </div>
-                    <div class="col-lg-12 grid-margin stretch-card">
-                      <div class="card table-striped">
-                        <div class="card-body">
-                            <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                                  <h6 class="preview-subject font-weight-normal mb-1">Samir Salim</h6>
-                                  <p class="text-gray ellipsis mb-0"> Added a file</p>
-                                  <button class="btn btn-danger" onclick="this.closest('.col-lg-12.grid-margin.stretch-card').remove()">Delete</button>
-  
-                                
-                                  
-                                
-  
-  
-                              </div>
-                    
-                              
-                            
-    
-                            
-    
-    
-    
-                        </div>
-                      </div>
-                    </div>
-                  
-              </div>
-            
-          
+                  </div>
                 
-            
+              </div>
+                
                
-                  
-                     
-                    
-                   
-                 
+              
+              </div>
+          
+              <script>
+                document.addEventListener('change', function (event) {
+                  if (event.target.classList.contains('task-anis')) {
+                    var taskElement = event.target.parentElement;
+                    var parentCategory = taskElement.parentElement.parentElement;
+
+                    if (parentCategory.id === 'tasks-todo') {
+                      document.getElementById('tasks-in-progress').querySelector('.task-list').appendChild(taskElement);
+                      event.target.checked = false; // Uncheck the checkbox
+                    } else if (parentCategory.id === 'tasks-in-progress') {
+                      document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
+                    }
+                  }
+                });
+              </script>
+              <style>
+              .task-categories {
+                display: flex;
+                justify-content: space-between;
+              }
+              
+              .task-category {
+                flex: 2;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin:  0 10px;
+              }
+              
+              .task-categories {
+              display: flex;
+             justify-content: space-between;
+           
+              }
+              .task-list {
+                padding: 0;
+              }
+              
+              .task-list .task {
+                background: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin: 5px 0;
+                padding: 10px;
+                position: relative
             
-      
-          </div>
+              }
+              
+              .task-checkbox {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+              }
+              
+              .add-task {
+                margin: 20px 0;
+              }
+              
+              #task-progress {
+                width: 100%;
+              }
+              </style>
+              
+
+
+
+              <canvas id="taskProgressChart" width="400" height="200"></canvas>
+              <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                  var ctx = document.getElementById('taskProgressChart').getContext('2d');
+              
+                  var data = {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                      label: 'Progression des Tâches',
+                      data: [10, 20, 30, 40, 50, 60], // Remplacez ces données par les vôtres
+                      backgroundColor: 'rgba(75, 192, 192, 0.2)', // Couleur de remplissage
+                      borderColor: 'rgba(75, 192, 192, 1)', // Couleur de la bordure
+                      borderWidth: 1, // Largeur de la bordure
+                    }],
+                  };
+              
+                  var options = {
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        max: 100, // Plage de valeurs de 0 à 100 (ou ajustez selon vos besoins)
+                      },
+                    },
+                  };
+              
+                  var myChart = new Chart(ctx, {
+                    type: 'line', // Type de graphique (par exemple, 'line' pour un graphique en ligne)
+                    data: data,
+                    options: options,
+                  });
+                });
+              </script>
+              
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
-          
+          <footer class="footer">
+            <div class="container-fluid d-flex justify-content-between">
+              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
+              <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+            </div>
+          </footer>
           <!-- partial -->
         </div>
         <!-- main-panel ends -->
@@ -391,31 +438,6 @@
     <script src="../PurpleAdmin-Free-Admin-Template-master/assets/js/dashboard.js"></script>
     <script src="../PurpleAdmin-Free-Admin-Template-master/assets/js/todolist.js"></script>
     <!-- End custom js for this page -->
-    <style>
-        .btn btn-danger
-        {
-            background-color: aqua;
-            width: 200px;
-            position: relative;
-            left: 100px;
-        }
-    </style>
-   <script>
-// JavaScript
-document.querySelectorAll('.btn-danger').forEach(function(button) {
-  button.addEventListener('click', function() {
-    // Remove the element
-    this.closest('.col-lg-12.grid-margin.stretch-card').remove();
-
-    // Check if there are any elements left
-    var elements = document.querySelectorAll('.col-lg-12.grid-margin.stretch-card');
-    if (elements.length === 0) {
-      var message = document.createElement('p');
-      message.textContent = 'No inbox message for now';
-      document.querySelector('.content-wrapper').appendChild(message);
-    }
-  });
-});
-    </script>
-</body>
+  </body>
+</html>
 </html>
