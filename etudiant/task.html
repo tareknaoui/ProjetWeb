@@ -276,74 +276,53 @@
             </div>
             
                 
-            <div class="task-categories">
-                <div class="task-category" id="tasks-todo">
-                  <h3>Tasks to Do</h3>
-                  <div class="task-list">
-                    
-                    <!-- List of tasks to do -->
+          
+              <div class="task-categories">
+                  <div class="task-category" id="tasks-todo">
+                    <h3>Tasks to Do</h3>
+                    <div class="task-list">
+                      <!-- List of tasks to do -->
+                      <div class="task">
+                        <h4>Dormir</h4>
+                        <p>Deadline: 12-sep</p>
+                        <input type="checkbox" class="task-anis">
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div class="task-category" id="tasks-in-progress">
-                  <h3>Tasks in Progress</h3>
-                  <div class="task-list">
-                    <!-- List of tasks in progress -->
+                  <div class="task-category" id="tasks-in-progress">
+                    <h3>Tasks in Progress</h3>
+                    <div class="task-list">
+                      <!-- List of tasks in progress -->
+                    </div>
                   </div>
-                </div>
-                <div class="task-category" id="tasks-completed">
-                  <h3>Completed Tasks</h3>
-                  <div class="task-list">
-                    <!-- List of completed tasks -->
+                  <div class="task-category" id="tasks-completed">
+                    <h3>Completed Tasks</h3>
+                    <div class="task-list">
+                      <!-- List of completed tasks -->
+                    </div>
                   </div>
-                </div>
+                
               </div>
+                
+               
               
-              <div class="add-task">
-                <input type="text" id="task-title" placeholder="Task Title">
-                <input type="text" id="task-deadline" placeholder="Deadline">
-                <input type="range" id="task-progress" min="0" max="100" value="0">
-                <button id="add-task">Add Task</button>
               </div>
-              
+          
               <script>
-              document.getElementById('add-task').addEventListener('click', function () {
-                var taskTitle = document.getElementById('task-title').value;
-                var taskDeadline = document.getElementById('task-deadline').value;
-                var taskProgress = document.getElementById('task-progress').value;
-              
-                var taskElement = document.createElement('div');
-                taskElement.classList.add('task');
-                taskElement.innerHTML = `<h4>${taskTitle}</h4><p>Deadline: ${taskDeadline}</p><p>Progress: ${taskProgress}%</p>`;
-                taskElement.innerHTML += '<input type="checkbox" class="task-checkbox">';
-              
-                if (taskProgress < 100) {
-                  document.getElementById('tasks-todo').querySelector('.task-list').appendChild(taskElement);
-                } else {
-                  document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
-                  taskElement.querySelector('.task-checkbox').checked = true;
-                }
-              
-                document.getElementById('task-title').value = '';
-                document.getElementById('task-deadline').value = '';
-                document.getElementById('task-progress').value = 0;
-              });
-              
-              document.addEventListener('change', function (event) {
-                if (event.target.classList.contains('task-checkbox')) {
-                  var taskElement = event.target.parentElement;
-                  var parentCategory = taskElement.parentElement.parentElement;
-              
-                  if (parentCategory.id === 'tasks-todo') {
-                    document.getElementById('tasks-in-progress').querySelector('.task-list').appendChild(taskElement);
-                  } else if (parentCategory.id === 'tasks-in-progress') {
-                    document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
-                  } else {
-                    event.target.checked = false;
+                document.addEventListener('change', function (event) {
+                  if (event.target.classList.contains('task-anis')) {
+                    var taskElement = event.target.parentElement;
+                    var parentCategory = taskElement.parentElement.parentElement;
+
+                    if (parentCategory.id === 'tasks-todo') {
+                      document.getElementById('tasks-in-progress').querySelector('.task-list').appendChild(taskElement);
+                      event.target.checked = false; // Uncheck the checkbox
+                    } else if (parentCategory.id === 'tasks-in-progress') {
+                      document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
+                    }
                   }
-                }
-              });
+                });
               </script>
-              
               <style>
               .task-categories {
                 display: flex;
@@ -351,18 +330,18 @@
               }
               
               .task-category {
-                flex: 1;
+                flex: 2;
                 padding: 10px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
-                margin: 10px;
+                margin:  0 10px;
               }
               
-              .task-category h3 {
-                font-size: 1.2rem;
-                margin-bottom: 10px;
+              .task-categories {
+              display: flex;
+             justify-content: space-between;
+           
               }
-              
               .task-list {
                 padding: 0;
               }
@@ -374,6 +353,7 @@
                 margin: 5px 0;
                 padding: 10px;
                 position: relative;
+            
               }
               
               .task-checkbox {
