@@ -51,9 +51,20 @@
       <!-- partial:partials/_navbar.html -->
       <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <a class="navbar-brand brand-logo" href="dashboard.html"><img src="assets/images/logo.svg" alt="logo" /></a>
-          <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+          <a  class="as"><H1>Logo</H1></a>
         </div>
+        <style>
+          .as {
+            text-decoration: none; /* Remove underline from link */
+          }
+          .as h1 {
+  color: #0d1316; /* Change the text color */
+  font-family: 'Arial', sans-serif; /* Change the font */
+  font-size: 2.5em; /* Increase the font size */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a text shadow */
+}
+        </style>
+    
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="mdi mdi-menu"></span>
@@ -67,6 +78,7 @@
                 <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
               </div>
             </form>
+
           </div>
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
@@ -223,12 +235,7 @@
             </li>
            
           
-            <li class="nav-item">
-              <a class="nav-link" href="page-topic-exploration.html">
-                <span class="menu-title"> Page Topic Exploration</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-            </li>
+           
        
             <li class="nav-item">
               <a class="nav-link" href="inbox.html">
@@ -245,15 +252,7 @@
             </li>
             
     
-            <li class="nav-item sidebar-actions">
-              <span class="nav-link">
-                <div class="border-bottom">
-                  <h6 class="font-weight-normal mb-3">Project</h6>
-                </div>
-                <button class="btn btn-block btn-lg btn-gradient-primary mt-4">See your project</button>
-                
-              </span>
-            </li>
+           
           </ul>
         </nav>
         <!-- partial -->
@@ -278,21 +277,25 @@
                 
           
               <div class="task-categories">
-                  <div class="task-category" id="tasks-todo">
-                    <h3>Tasks to Do</h3>
-                    <div class="task-list">
-                      <!-- List of tasks to do -->
-                      <div class="task">
-                        <h4>Dormir</h4>
-                        <p>Deadline: 12-sep</p>
-                        <input type="checkbox" class="task-anis">
+                <div class="task-category" id="tasks-todo">
+                  <h3>Tasks to Do</h3>
+                  <div class="task-list">
+                    <!-- List of tasks to do -->
+                    <div class="task">
+                      <h4>Dormir</h4>
+                      <p>Deadline: 12-sep</p>
+                      <input type="checkbox" class="task-anis">
+                      <div class="progress" style="display: none;">
+                        <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                     </div>
                   </div>
+                </div>
                   <div class="task-category" id="tasks-in-progress">
                     <h3>Tasks in Progress</h3>
                     <div class="task-list">
-                      <!-- List of tasks in progress -->
+                    
+                      <!-- ... rest of your tasks ... -->
                     </div>
                   </div>
                   <div class="task-category" id="tasks-completed">
@@ -313,13 +316,26 @@
                   if (event.target.classList.contains('task-anis')) {
                     var taskElement = event.target.parentElement;
                     var parentCategory = taskElement.parentElement.parentElement;
+                    var progressBar = taskElement.querySelector('.progress-bar');
 
                     if (parentCategory.id === 'tasks-todo') {
                       document.getElementById('tasks-in-progress').querySelector('.task-list').appendChild(taskElement);
                       event.target.checked = false; // Uncheck the checkbox
+                      progressBar.parentElement.style.display = 'block'; // Show the progress bar
                     } else if (parentCategory.id === 'tasks-in-progress') {
                       document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
+                      progressBar.parentElement.style.display = 'none'; // Hide the progress bar
                     }
+                  }
+                });
+
+                document.addEventListener('input', function (event) {
+                  if (event.target.classList.contains('progress-input')) {
+                    var taskElement = event.target.parentElement;
+                    var progressBar = taskElement.querySelector('.progress-bar');
+
+                    progressBar.style.width = event.target.value + '%'; // Set the progress bar width
+                    progressBar.setAttribute('aria-valuenow', event.target.value); // Set the progress bar value
                   }
                 });
               </script>
