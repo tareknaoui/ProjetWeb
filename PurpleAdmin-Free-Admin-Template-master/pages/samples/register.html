@@ -40,6 +40,10 @@
                     <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="prenom">
                   </div>
                   <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputDate1" placeholder="Date (MM/DD/YYYY)">
+                  </div>
+              
+                  <div class="form-group">
                     <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email">
                   </div>
                   
@@ -101,39 +105,40 @@
         }
       
         $(document).ready(function() {
-          $('#registrationForm').on('submit', function(e) {
-            e.preventDefault();
-      
-            const email = $('#exampleInputEmail1').val();
-            const password = $('#exampleInputPassword1').val();
-            const confirmPassword = $('#exampleInputPassword2').val();      
+          $('#exampleInputEmail1').on('input', function() {
+            const email = $(this).val();
             if (!testEmail(email)) {
-              alert('Invalid email');
-              return;
+              $(this).next('.error').remove(); // Remove previous error message
+              $(this).after('<span class="error">Invalid email format.</span>');
+            } else {
+              $(this).next('.error').remove(); // Remove error message
             }
-      
+          });
+
+          $('#exampleInputPassword1').on('input', function() {
+            const password = $(this).val();
             if (!testPassword(password)) {
-              alert(' password weak');
-              return;
+              $(this).next('.error').remove(); // Remove previous error message
+              $(this).after('<span class="error">Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</span>');
+            } else {
+              $(this).next('.error').remove(); // Remove error message
             }
+          });
+
+          $('#exampleInputPassword2').on('input', function() {
+            const password = $('#exampleInputPassword1').val();
+            const confirmPassword = $(this).val();
             if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-             }
-            
-      
-            const formData = new FormData(document.getElementById('registrationForm'));
-            const role = formData.get('userType'); // Get the value of the role
-      
-            if (role === 'Etudiant') {
-              // Redirect the user to the student dashboard page
-              window.location.href = '../../../etudiant/dashboardEt.html';
-            } else if (role === 'Encadreur') {
-              // Redirect the user to the teacher dashboard page
-              window.location.href = '../../dashboard.html';
+              $(this).next('.error').remove(); // Remove previous error message
+              $(this).after('<span class="error">Passwords do not match.</span>');
+            } else {
+              $(this).next('.error').remove(); // Remove error message
             }
           });
         });
+
+          
+
         $(document).ready(function() {
   $('input[type=radio][name=userType]').change(function() {
     if (this.value == 'Etudiant') {
@@ -150,40 +155,35 @@
   });
 });
 
-// Create a new Driver instance
-const driver = new Driver();
+$(document).ready(function() {
+  $('#exampleInputDate1').on('change', function() {
+    const date = $(this).val();
+    const datePattern = /^(0[1-9]|1[0-2])\/(0[1-9]|1[0-9]|2[0-9]|3[01])\/(19|20)\d\d$/;
 
-// Define the steps of your tour
-driver.defineSteps([
-  {
-    element: '#exampleInputUsername1',
-    popover: {
-      title: 'Nom',
-      description: 'Enter your first name here',
-      position: 'bottom'
+    if (!datePattern.test(date)) {
+      $(this).after('<span class="error">Invalid date format. Please use MM/DD/YYYY.</span>');
     }
-  },
-  {
-    element: '#exampleInputEmail1',
-    popover: {
-      title: 'Email',
-      description: 'Enter your email here',
-      position: 'bottom'
-    }
-  },
-  {
-    element: '#exampleInputPassword1',
-    popover: {
-      title: 'Password',
-      description: 'Enter your password here',
-      position: 'bottom'
-    }
-  },
-  // Add more steps as needed
-]);
+  });
+});
+$(document).ready(function() {
+  $('#registrationForm').on('submit', function(e) {
+    const email = $('#exampleInputEmail1').val();
+    const password = $('#exampleInputPassword1').val();
+    const confirmPassword = $('#exampleInputPassword2').val();
+    const userType = $('input[name="userType"]:checked').val();
+    const terms = $('input[type="checkbox"]').is(':checked');
 
-// Start the tour
-driver.start();
+    if (!email || !password || !confirmPassword || !userType || !terms) {
+      alert('Please fill out all fields.');
+      e.preventDefault();
+      return;
+    }
+
+    // Continue with the rest of your form submission code...
+  });
+});
+
+
       </script>
     
 
