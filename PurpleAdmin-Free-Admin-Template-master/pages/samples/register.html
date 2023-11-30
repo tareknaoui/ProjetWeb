@@ -18,6 +18,8 @@
         <!-- End layout styles -->
         <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/driver.js/dist/driver.min.css">
+<script src="https://unpkg.com/driver.js/dist/driver.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
       </head>
   <body>
@@ -32,11 +34,15 @@
                 <h6 class="font-weight-light">Signing up is easy. It only takes a few steps</h6>
                 <form class="pt-3" id="registrationForm">
                   <div class="form-group">
-                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="Username">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="Nom">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="prenom">
                   </div>
                   <div class="form-group">
                     <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email">
                   </div>
+                  
                   <div class="form-group">
                     <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
                   </div>
@@ -50,6 +56,7 @@
                     <input type="radio" id="teacher" name="userType" value="Encadreur">
                     <label for="teacher">Teacher</label>
                   </div>
+                  <div id="specialty"></div>
                   <div class="mb-4">
                     <div class="form-check">
                       <label class="form-check-label text-muted">
@@ -106,7 +113,7 @@
             }
       
             if (!testPassword(password)) {
-              alert('Invalid password');
+              alert(' password weak');
               return;
             }
             if (password !== confirmPassword) {
@@ -127,6 +134,56 @@
             }
           });
         });
+        $(document).ready(function() {
+  $('input[type=radio][name=userType]').change(function() {
+    if (this.value == 'Etudiant') {
+      $('#specialty').html(`
+        <select name="specialty">
+          <option value="informatique">Informatique</option>
+          <option value="chimie">Chimie</option>
+          <option value="commerce">Commerce</option>
+        </select>
+      `);
+    } else {
+      $('#specialty').html('');
+    }
+  });
+});
+
+// Create a new Driver instance
+const driver = new Driver();
+
+// Define the steps of your tour
+driver.defineSteps([
+  {
+    element: '#exampleInputUsername1',
+    popover: {
+      title: 'Nom',
+      description: 'Enter your first name here',
+      position: 'bottom'
+    }
+  },
+  {
+    element: '#exampleInputEmail1',
+    popover: {
+      title: 'Email',
+      description: 'Enter your email here',
+      position: 'bottom'
+    }
+  },
+  {
+    element: '#exampleInputPassword1',
+    popover: {
+      title: 'Password',
+      description: 'Enter your password here',
+      position: 'bottom'
+    }
+  },
+  // Add more steps as needed
+]);
+
+// Start the tour
+driver.start();
       </script>
     
 
