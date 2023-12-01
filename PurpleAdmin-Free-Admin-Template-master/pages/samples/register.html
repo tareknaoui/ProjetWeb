@@ -18,8 +18,11 @@
         <!-- End layout styles -->
         <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/driver.js/dist/driver.min.css">
+<script src="https://unpkg.com/driver.js/dist/driver.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
       </head>
+   
   <body>
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
@@ -32,17 +35,26 @@
                 <h6 class="font-weight-light">Signing up is easy. It only takes a few steps</h6>
                 <form class="pt-3" id="registrationForm">
                   <div class="form-group">
-                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="Username">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="Nom">
                   </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="prenom">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputDate1" placeholder="Date (MM/DD/YYYY)">
+                  </div>
+              
                   <div class="form-group">
                     <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email">
                   </div>
+                  
                   <div class="form-group">
                     <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
                   </div>
                   <div class="form-group">
                     <input type="password" class="form-control form-control-lg" id="exampleInputPassword2" placeholder="Confirm Password">
                   </div>
+                  
                   <div class="form-group">
                     <label>I am a :</label><br>
                     <input type="radio" id="student" name="userType" value="Etudiant">
@@ -50,6 +62,7 @@
                     <input type="radio" id="teacher" name="userType" value="Encadreur">
                     <label for="teacher">Teacher</label>
                   </div>
+                  <div id="specialty"></div>
                   <div class="mb-4">
                     <div class="form-check">
                       <label class="form-check-label text-muted">
@@ -94,39 +107,85 @@
         }
       
         $(document).ready(function() {
-          $('#registrationForm').on('submit', function(e) {
-            e.preventDefault();
-      
-            const email = $('#exampleInputEmail1').val();
-            const password = $('#exampleInputPassword1').val();
-            const confirmPassword = $('#exampleInputPassword2').val();      
+          $('#exampleInputEmail1').on('input', function() {
+            const email = $(this).val();
             if (!testEmail(email)) {
-              alert('Invalid email');
-              return;
+              $(this).next('.error').remove(); // Remove previous error message
+              $(this).after('<span class="error">Invalid email format.</span>');
+            } else {
+              $(this).next('.error').remove(); // Remove error message
             }
-      
+          });
+
+          $('#exampleInputPassword1').on('input', function() {
+            const password = $(this).val();
             if (!testPassword(password)) {
-              alert('Invalid password');
-              return;
+              $(this).next('.error').remove(); // Remove previous error message
+              $(this).after('<span class="error">Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</span>');
+            } else {
+              $(this).next('.error').remove(); // Remove error message
             }
+          });
+
+          $('#exampleInputPassword2').on('input', function() {
+            const password = $('#exampleInputPassword1').val();
+            const confirmPassword = $(this).val();
             if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-             }
-            
-      
-            const formData = new FormData(document.getElementById('registrationForm'));
-            const role = formData.get('userType'); // Get the value of the role
-      
-            if (role === 'Etudiant') {
-              // Redirect the user to the student dashboard page
-              window.location.href = '../../../etudiant/dashboardEt.html';
-            } else if (role === 'Encadreur') {
-              // Redirect the user to the teacher dashboard page
-              window.location.href = '../../dashboard.html';
+              $(this).next('.error').remove(); // Remove previous error message
+              $(this).after('<span class="error">Passwords do not match.</span>');
+            } else {
+              $(this).next('.error').remove(); // Remove error message
             }
           });
         });
+
+          
+
+        $(document).ready(function() {
+  $('input[type=radio][name=userType]').change(function() {
+    if (this.value == 'Etudiant') {
+      $('#specialty').html(`
+        <select name="specialty">
+          <option value="informatique">Informatique</option>
+          <option value="chimie">Chimie</option>
+          <option value="commerce">Commerce</option>
+        </select>
+      `);
+    } else {
+      $('#specialty').html('');
+    }
+  });
+});
+
+$(document).ready(function() {
+  $('#exampleInputDate1').on('change', function() {
+    const date = $(this).val();
+    const datePattern = /^(0[1-9]|1[0-2])\/(0[1-9]|1[0-9]|2[0-9]|3[01])\/(19|20)\d\d$/;
+
+    if (!datePattern.test(date)) {
+      $(this).after('<span class="error">Invalid date format. Please use MM/DD/YYYY.</span>');
+    }
+  });
+});
+$(document).ready(function() {
+  $('#registrationForm').on('submit', function(e) {
+    const email = $('#exampleInputEmail1').val();
+    const password = $('#exampleInputPassword1').val();
+    const confirmPassword = $('#exampleInputPassword2').val();
+    const userType = $('input[name="userType"]:checked').val();
+    const terms = $('input[type="checkbox"]').is(':checked');
+
+    if (!email || !password || !confirmPassword || !userType || !terms) {
+      alert('Please fill out all fields.');
+      e.preventDefault();
+      return;
+    }
+
+    // Continue with the rest of your form submission code...
+  });
+});
+
+
       </script>
     
 
