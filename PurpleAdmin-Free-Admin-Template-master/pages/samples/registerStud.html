@@ -63,9 +63,7 @@
                     <input type="text" class="form-control form-control-lg" id="exampleInputSpecialty1" placeholder="Spécialité">
                   </div>
                   <div class="mt-3">
-                    <button type="submit"
-                        class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
-                        onclick="window.location.href = '../../../etudiant/dashboardEt.html';">SIGN UP</button>
+                    <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SIGN UP</button>
                 </div>
                   <div class="text-center mt-4 font-weight-light"> Already have an account? <a href="login.html" class="text-primary">Login</a>
                   </div>
@@ -185,6 +183,8 @@ $(document).ready(function() {
 
       $(document).ready(function() {
         $('#registrationForm').on('submit', function(e) {
+          e.preventDefault();
+
           const email = $('#exampleInputEmail1').val();
           const password = $('#exampleInputPassword1').val();
           const confirmPassword = $('#exampleInputPassword2').val();
@@ -193,11 +193,11 @@ $(document).ready(function() {
 
           if (!email || !password || !confirmPassword || !userType || !terms) {
             alert('Please fill out all fields.');
-            e.preventDefault();
             return;
           }
 
-          // Continue with the rest of your form submission code...
+          // All validation checks have passed, redirect to the dashboard page
+          window.location.href = '../../../etudiant/dashboardEt.html';
         });
       });
     </script>
