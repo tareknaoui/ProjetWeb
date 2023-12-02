@@ -191,25 +191,45 @@
                                     });
 
 
-                                    $(document).ready(function() {
-                                        $('#registrationForm').on('submit', function(e) {
-                                            e.preventDefault();
+                                    $(document).ready(function () {
+  $('#registrationForm').on('submit', function (e) {
+    e.preventDefault();
 
-                                            const email = $('#exampleInputEmail1').val();
-                                            const password = $('#exampleInputPassword1').val();
-                                            const confirmPassword = $('#exampleInputPassword2').val();
-                                            const userType = $('input[name="userType"]:checked').val();
-                                            const terms = $('input[type="checkbox"]').is(':checked');
+    // Supprimer les messages d'erreur existants
+    $('.error').hide();
 
-                                            if (!email || !password || !confirmPassword || !userType || !terms) {
-                                                alert('Please fill out all fields.');
-                                                return;
-                                            }
+    let isValid = true;
 
-                                            // All validation checks have passed, redirect to the dashboard page
-                                            window.location.href = '../../dashboard.html';
-                                        });
-                                    });
+    // Vérifier si tous les champs sont remplis
+    $(this).find('input').each(function () {
+      if ($(this).val() === '') {
+        isValid = false;
+        const errorMessage = 'Veuillez remplir ce champ.';
+        $(this).parent().append('<div class="error" style="color: red;">' + errorMessage + '</div>');
+      }
+    });
+
+    if (!isValid) {
+      alert('Veuillez remplir tous les champs.');
+      return;
+    }
+
+    const email = $('#exampleInputEmail1').val();
+    const password = $('#exampleInputPassword1').val();
+    const confirmPassword = $('#exampleInputPassword2').val();
+    const userType = $('input[name="userType"]:checked').val();
+    const terms = $('input[type="checkbox"]').is(':checked');
+
+    if (!email || !password || !confirmPassword || !userType || !terms) {
+      alert('Veuillez remplir tous les champs.');
+      return;
+    }
+
+    // Toutes les vérifications de validation ont réussi, rediriger vers la page du tableau de bord
+    window.location.href = '../../../etudiant/dashboardEt.html';
+  });
+});
+
                                 </script>
 </body>
 
