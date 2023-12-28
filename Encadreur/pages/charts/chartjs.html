@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
   </head>
   <body>
     <div class="container-scroller">
@@ -294,6 +296,34 @@
                         
                       </div>
                       <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a Topic</button>
+                          <!-- Modal pour ajouter un sujet -->
+    <div class="modal" id="addTopicModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add a Topic</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Formulaire pour ajouter un sujet -->
+            <form id="addTopicForm">
+              <div class="mb-3">
+                <label for="topicTitle" class="form-label">Topic Title</label>
+                <input type="text" class="form-control" id="topicTitle" required>
+              </div>
+              <div class="mb-3">
+                <label for="topicDescription" class="form-label">Topic Description</label>
+                <textarea class="form-control" id="topicDescription" rows="3" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-gradient-primary">Add Topic</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
                       <button class="btn btn-danger btn-lg mt-4">Delete</button>
                     </div>
                   </div>
@@ -331,5 +361,55 @@
     <!-- Custom js for this page -->
     <script src="../../assets/js/chart.js"></script>
     <!-- End custom js for this page -->
+
+    <script>
+      // Attend que le document soit prêt
+      $(document).ready(function() {
+        // Gère le clic sur le bouton "+ Add a Topic"
+        $('button.btn-gradient-primary').click(function() {
+          // Affiche la fenêtre modale pour ajouter un sujet
+          $('#addTopicModal').modal('show');
+        });
+
+        // Gère la soumission du formulaire
+        $('#addTopicForm').submit(function(event) {
+          // Empêche le comportement par défaut du formulaire (rechargement de la page)
+          event.preventDefault();
+
+          // Récupère les valeurs du formulaire
+          var topicTitle = $('#topicTitle').val();
+          var topicDescription = $('#topicDescription').val();
+
+          // Effectuez toute validation nécessaire ici
+
+          // Ajoute le nouveau sujet au tableau
+          addTopicToTable(topicTitle, topicDescription);
+
+          // Réinitialise le formulaire
+          $('#addTopicForm')[0].reset();
+
+          // Ferme la fenêtre modale
+          $('#addTopicModal').modal('hide');
+        });
+
+        // Fonction pour ajouter un nouveau sujet au tableau
+        function addTopicToTable(title, description) {
+          // Récupère le corps du tableau
+          var tableBody = $('.table tbody');
+
+          // Crée une nouvelle ligne de tableau
+          var newRow = tableBody.append('<tr></tr>').children('tr:last');
+
+          // Ajoute les cellules avec les détails du sujet
+          newRow.append('<td>' + title + '</td>');
+          newRow.append('<td>' + description + '</td>');
+          newRow.append('<td><label class="badge badge-gradient-success">New</label></td>');
+          newRow.append('<td>Now</td>');
+          newRow.append('<td>None yet</td>');
+
+          // Vous pouvez également effectuer des actions supplémentaires, telles que la mise à jour du serveur avec le nouveau sujet
+        }
+      });
+    </script>
   </body>
 </html>
