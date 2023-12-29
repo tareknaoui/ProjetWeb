@@ -1,0 +1,118 @@
+       <div class="container">
+                            <h1 class="project-title">Projet 1</h1>
+                            <section class="project-grid">
+                                <div class="grid-item">
+                                    <h2>Description du Projet</h2>
+                                    <p>Ceci est la description détaillée du Projet 1. Vous pouvez inclure toutes les informations pertinentes concernant le projet ici.</p>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>Membres du Projet</h2>
+                                    <ul class="project-members">
+                                        <li>Membre 1</li>
+                                        <li>Membre 2</li>
+                                        <li>Membre 3</li>
+                                        <!-- Ajoutez plus de membres au besoin -->
+                                    </ul>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>État du Projet</h2>
+                                    <p>En cours</p>
+                                </div>
+                                <div class="grid-item">
+                                    <h2>Progression du Projet</h2>
+                                    <table class="project-progress-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tâche</th>
+                                                <th>État</th>
+                                                <th>Progression</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tâche 1</td>
+                                                <td>En cours</td>
+                                                <td>
+                                                  <div class="progress">
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                  </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tâche 2</td>
+                                                <td>Terminée</td>
+                                                <td>
+                                                  <div class="progress">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                  </div>
+                                                </td>
+                                            </tr>
+                                            <!-- Ajoutez plus de lignes de tâches au besoin -->
+                                            
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                
+                                <!-- Ajoutez d'autres éléments de grille au besoin -->
+             </div>
+             <div class="test">
+            <div class="col-md-5 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h1>Membre 1 :</h1>
+                  <h4 class="card-title text-white">Todo</h4>
+                  <div class="add-items d-flex">
+                    <input type="text" class="form-control todo-list-input" placeholder="What do you need to do today?">
+                    <button class="add btn btn-gradient-primary font-weight-bold todo-list-add-btn" id="add-task">Add</button>
+                  </div>
+                  <div class="list-wrapper">
+                    <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
+                      <li>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input > Meeting with Alisa </label>
+                        </div>
+                        <i class="remove mdi mdi-close-circle-outline"></i>
+                      </li>
+                      <li class="completed">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input > Call John </label>
+                        </div>
+                        <i class="remove mdi mdi-close-circle-outline"></i>
+                      </li>
+                      <li>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input > Create invoice </label>
+                        </div>
+                        <i class="remove mdi mdi-close-circle-outline"></i>
+                      </li>
+                      <li>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input> Print Statements </label>
+                        </div>
+                        <i class="remove mdi mdi-close-circle-outline"></i>
+                      </li>
+                      <li class="completed">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input > Prepare for presentation </label>
+                        </div>
+                        <i class="remove mdi mdi-close-circle-outline"></i>
+                      </li>
+                      <li>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input > Pick up kids from school </label>
+                        </div>
+                        <i class="remove mdi mdi-close-circle-outline"></i>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
