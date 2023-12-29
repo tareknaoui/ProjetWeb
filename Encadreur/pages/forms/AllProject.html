@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
   </head>
   <body>
     <div class="container-scroller">
@@ -195,18 +197,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
-                <span class="menu-title">Project </span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-medical-bag menu-icon"></i>
+              <a class="nav-link" href="../../pages/forms/AllProject.html">
+                <span class="menu-title">Project Viewing Page</span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
-              <div class="collapse" id="general-pages">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item"> <a class="nav-link" href="../../pages/forms/AddProject.html"> Add Project </a></li>
-                  <li class="nav-item"> <a class="nav-link" href="../../pages/forms/AllProject.html"> All Project </a></li>
-
-                </ul>
-              </div>
             </li>
             
             <li class="nav-item">
@@ -271,7 +265,61 @@
                           </tbody>
                       </table>
                       <!-- Bouton "Add Project" en bas du tableau -->
-                      
+                      <!-- Ajouter le bouton "Add Project" en bas du tableau -->
+<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+  Add Project
+</button>
+
+<!-- Ajouter le bouton "Delete Project" en bas du tableau -->
+<button type="button" class="btn btn-danger mt-3" id="deleteProjectBtn">
+  Delete Project
+</button>
+
+<!-- Modal pour le formulaire d'ajout de projet -->
+<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProjectModalLabel">Add Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Formulaire d'ajout de projet -->
+        <form id="addProjectForm">
+          <div class="mb-3">
+            <label for="projectName" class="form-label">Project Name</label>
+            <input type="text" class="form-control" id="projectName" required>
+          </div>
+          <div class="mb-3">
+            <label for="projectDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="projectDescription" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    // Fonction pour ajouter un projet au tableau
+    $("#addProjectForm").submit(function (event) {
+      event.preventDefault();
+      var projectName = $("#projectName").val();
+      var projectDescription = $("#projectDescription").val();
+      var newRow = "<tr><td><a href='#'>" + projectName + "</a></td><td>" + projectDescription + "</td><td><label class='badge badge-gradient-success'>Active</label></td><td>" + new Date().toLocaleDateString() + "</td></tr>";
+      $("table tbody").append(newRow);
+      $('#addProjectModal').modal('hide'); // Fermer la modal après ajout
+    });
+
+    // Fonction pour supprimer un projet du tableau
+    $("#deleteProjectBtn").click(function () {
+      $("table tbody tr").has("input:checked").remove();
+    });
+  });
+</script>
+
                   </div>
                     
                    
