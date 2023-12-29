@@ -296,6 +296,8 @@
                         
                       </div>
                       <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a Topic</button>
+                      <div id="responseMessage"></div>
+
                           <!-- Modal pour ajouter un sujet -->
     <div class="modal" id="addTopicModal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -317,9 +319,11 @@
                 <label for="topicDescription" class="form-label">Topic Description</label>
                 <textarea class="form-control" id="topicDescription" rows="3" required></textarea>
               </div>
-              <button type="submit" class="btn btn-gradient-primary">Add Topic</button>
+              <button type="button" id="submitForm" class="btn btn-gradient-primary">Add Topic</button>
             </form>
           </div>
+          <!-- Add this element to your HTML where you want to display the response -->
+
         </div>
       </div>
     </div>
@@ -390,6 +394,7 @@
 
           // Ferme la fenêtre modale
           $('#addTopicModal').modal('hide');
+
         });
 
         // Fonction pour ajouter un nouveau sujet au tableau
@@ -411,5 +416,37 @@
         }
       });
     </script>
+    <script>
+      $(document).ready(function() {
+        $("#submitForm").on("click", function() {
+          // Get form data
+          var topicTitle = $("#topicTitle").val();
+          var topicDescription = $("#topicDescription").val();
+    
+          // Create a data object to send to the server
+          var formData = {
+            title: topicTitle,
+            description: topicDescription
+          };
+    
+          // Use Ajax to send data to the PHP backend
+          $.ajax({
+            type: "POST",
+            url: "chartjs.php", // Replace with the actual path to your PHP script
+            data: formData,
+            success: function(response) {
+              // Update a specific element with the response message
+              $("#responseMessage").html(response);
+            },
+            error: function(error) {
+              // Handle errors if the request fails
+              console.log(error);
+            }
+          });
+        });
+      });
+    </script>
+    
+    
   </body>
 </html>

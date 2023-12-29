@@ -18,8 +18,6 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
   </head>
   <body>
     <div class="container-scroller">
@@ -196,6 +194,7 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
+           
             <li class="nav-item">
               <a class="nav-link" href="../../pages/forms/AllProject.html">
                 <span class="menu-title">Project Viewing Page</span>
@@ -236,7 +235,7 @@
               <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">My Topics</h4>
+                    <h4 class="card-title">My Projects</h4>
                    
                     <div class="table-responsive">
                       <table class="table">
@@ -264,62 +263,38 @@
                               <!-- Ajoutez plus de lignes de projet au besoin -->
                           </tbody>
                       </table>
+                      <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a Project</button>
+  
+                      <div class="modal" id="addProjectModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Add a Project</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Formulaire pour ajouter un sujet -->
+                              <form id="addProjectForm">
+                                <div class="mb-3">
+                                  <label for="ProjectTitle" class="form-label">Project Title</label>
+                                  <input type="text" class="form-control" id="ProjectTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="ProjectDescription" class="form-label"> Description</label>
+                                  <textarea class="form-control" id="ProjectDescription" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-gradient-primary">Add Project</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button class="btn btn-danger mb-2" id="deleteProjectBtn">Supprimer un Projet</button>
+
                       <!-- Bouton "Add Project" en bas du tableau -->
-                      <!-- Ajouter le bouton "Add Project" en bas du tableau -->
-<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addProjectModal">
-  Add Project
-</button>
-
-<!-- Ajouter le bouton "Delete Project" en bas du tableau -->
-<button type="button" class="btn btn-danger mt-3" id="deleteProjectBtn">
-  Delete Project
-</button>
-
-<!-- Modal pour le formulaire d'ajout de projet -->
-<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addProjectModalLabel">Add Project</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Formulaire d'ajout de projet -->
-        <form id="addProjectForm">
-          <div class="mb-3">
-            <label for="projectName" class="form-label">Project Name</label>
-            <input type="text" class="form-control" id="projectName" required>
-          </div>
-          <div class="mb-3">
-            <label for="projectDescription" class="form-label">Description</label>
-            <textarea class="form-control" id="projectDescription" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Add</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  $(document).ready(function () {
-    // Fonction pour ajouter un projet au tableau
-    $("#addProjectForm").submit(function (event) {
-      event.preventDefault();
-      var projectName = $("#projectName").val();
-      var projectDescription = $("#projectDescription").val();
-      var newRow = "<tr><td><a href='#'>" + projectName + "</a></td><td>" + projectDescription + "</td><td><label class='badge badge-gradient-success'>Active</label></td><td>" + new Date().toLocaleDateString() + "</td></tr>";
-      $("table tbody").append(newRow);
-      $('#addProjectModal').modal('hide'); // Fermer la modal après ajout
-    });
-
-    // Fonction pour supprimer un projet du tableau
-    $("#deleteProjectBtn").click(function () {
-      $("table tbody tr").has("input:checked").remove();
-    });
-  });
-</script>
-
+                      
                   </div>
                     
                    
@@ -358,10 +333,57 @@
     <!-- inject:js -->
     <script src="../../assets/js/off-canvas.js"></script>
     <script src="../../assets/js/hoverable-collapse.js"></script>
-    <script src="../../assets/js/misc.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script src="../../assets/js/chart.js"></script>
+    
+    <script>
+      // Attend que le document soit prêt
+      $(document).ready(function() {
+        // Gère le clic sur le bouton "+ Add a Project"
+        $('button.btn-gradient-primary').click(function() {
+          // Affiche la fenêtre modale pour ajouter un sujet
+          $('#addProjectModal').modal('show');
+        });
+
+        // Gère la soumission du formulaire
+        $('#addProjectForm').submit(function(event) {
+          // Empêche le comportement par défaut du formulaire (rechargement de la page)
+          event.preventDefault();
+
+          // Récupère les valeurs du formulaire
+          var ProjectTitle = $('#ProjectTitle').val();
+          var ProjectDescription = $('#ProjectDescription').val();
+
+          // Effectuez toute validation nécessaire ici
+
+          // Ajoute le nouveau sujet au tableau
+          addProjectToTable(ProjectTitle, ProjectDescription);
+
+          // Réinitialise le formulaire
+          $('#addProjectForm')[0].reset();
+
+          // Ferme la fenêtre modale
+          $('#addProjectModal').modal('hide');
+        });
+
+        // Fonction pour ajouter un nouveau sujet au tableau
+        function addProjectToTable(title, description) {
+          // Récupère le corps du tableau
+          var tableBody = $('.table tbody');
+
+          // Crée une nouvelle ligne de tableau
+          var newRow = tableBody.append('<tr></tr>').children('tr:last');
+
+          // Ajoute les cellules avec les détails du sujet
+          newRow.append('<td>' + title + '</td>');
+          newRow.append('<td>' + description + '</td>');
+          newRow.append('<td><label class="badge badge-gradient-success">New</label></td>');
+          newRow.append('<td>Now</td>');
+          newRow.append('<td>None yet</td>');
+
+          // Vous pouvez également effectuer des actions supplémentaires, telles que la mise à jour du serveur avec le nouveau sujet
+        }
+      });
+    </script>
+    
     <!-- End custom js for this page -->
   </body>
 </html>
