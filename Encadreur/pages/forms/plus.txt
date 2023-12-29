@@ -115,4 +115,82 @@
                 </div>
               </div>
             </div>
-            
+            tacheeeeeeee
+            <div class="col-12 grid-margin">
+  <div class="card">
+    <div class="card-body">
+      <h1>New Task</h1>
+      <form id="newTaskForm">
+        <!-- Sujet et Description -->
+        <div class="mb-3">
+          <label for="taskSubject" class="form-label">Sujet</label>
+          <input type="text" class="form-control" id="taskSubject" name="subject" placeholder="Entrez le sujet de la tâche" required>
+        </div>
+        <div class="mb-3">
+          <label for="taskDescription" class="form-label">Description</label>
+          <textarea class="form-control" id="taskDescription" name="description" rows="4" placeholder="Entrez la description de la tâche" required></textarea>
+        </div>
+
+        <!-- Participants - Assigné à et Responsable -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="assigneeSelect" class="form-label">Assigné à</label>
+            <select class="form-select" id="assigneeSelect" name="assignee">
+              <!-- Options seront ajoutées dynamiquement via JavaScript -->
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="responsibleSelect" class="form-label">Responsable</label>
+            <select class="form-select" id="responsibleSelect" name="responsible">
+              <!-- Options seront ajoutées dynamiquement via JavaScript -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Estimations et Temps -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="estimatedDuration" class="form-label">Durée estimée (heures)</label>
+            <input type="number" class="form-control" id="estimatedDuration" name="estimatedDuration" placeholder="Entrez la durée estimée" required>
+          </div>
+          <div class="col-md-6">
+            <label for="remainingHours" class="form-label">Heures restantes</label>
+            <input type="number" class="form-control" id="remainingHours" name="remainingHours" placeholder="Entrez les heures restantes" required>
+          </div>
+        </div>
+
+        <!-- Détails - Date, Progrès, Catégorie, Version, Priorité -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="startDate" class="form-label">Date de début</label>
+            <input type="date" class="form-control" id="startDate" name="startDate">
+          </div>
+          <div class="col-md-6">
+            <label for="progress" class="form-label">Progrès (%)</label>
+            <input type="number" class="form-control" id="progress" name="progress" placeholder="Entrez le progrès en pourcentage" required>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="category" class="form-label">Catégorie</label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="Entrez la catégorie">
+          </div>
+          <div class="col-md-6">
+            <label for="version" class="form-label">Version</label>
+            <input type="text" class="form-control" id="version" name="version" placeholder="Entrez la version">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="priority" class="form-label">Priorité</label>
+            <input type="text" class="form-control" id="priority" name="priority" placeholder="Entrez la priorité">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-gradient-primary font-weight-bold todo-list-add-btn">Ajouter la tâche</button>
+      </form>
+    </div>
+  </div>
+</div>
