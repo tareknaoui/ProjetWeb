@@ -1,7 +1,7 @@
 <?php
-// ... (your existing code)
+ob_start();
 
-// Establish a database connection (replace with your database credentials)
+// Établir une connexion à la base de données (remplacez par vos informations d'accès à la base de données)
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -9,7 +9,7 @@ $database = "projetweb";
 
 $link = new mysqli($host, $user, $password, $database);
 
-// Check the connection
+// Vérifier la connexion 
 if ($link->connect_error) {
     die("Connection failed: " . $link->connect_error);
 }
@@ -17,16 +17,20 @@ if ($link->connect_error) {
 // Récupérer le prénom et le nom de l'utilisateur connecté
 session_start();
 $email = $_SESSION['email'];
+$stmtUser = $link->prepare("SELECT Prenom, Nom FROM etudiants WHERE AdresseEmail = ?");
+$stmtUser->bind_param("s", $email);
+$stmtUser->execute();
+$stmtUser->bind_result($prenom, $nom);
+$stmtUser->fetch();
+$stmtUser->close();
 
-$stmt = $link->prepare("SELECT Prenom, Nom FROM etudiants WHERE AdresseEmail = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$stmt->bind_result($prenom, $nom);
-$stmt->fetch();
+// Fetch notifications
+// Fetch all notifications
+$stmtNotifications = $link->prepare("SELECT * FROM notification");
+$stmtNotifications->execute();
+$resultNotifications = $stmtNotifications->get_result();
 
-$stmt->close();
-$notificationsQuery = "SELECT * FROM your_notification_table";
-$notificationsResult = $link->query($notificationsQuery);
+
 ?>
 
 <!DOCTYPE html>
@@ -276,42 +280,63 @@ $notificationsResult = $link->query($notificationsQuery);
                 </ul>
               </nav>
             </div>
-            <div class="row">
-                   
-            <div class="col-lg-12 grid-margin stretch-card">
-    <div class="card table-striped">
-        <div class="card-body">
-            <?php
-            // Check if there are notifications
-            if ($notificationsResult->num_rows > 0) {
-                while ($notification = $notificationsResult->fetch_assoc()) {
-                    // Display each notification
-                    echo '<div class="preview-item-content d-flex align-items-start flex-column justify-content-center">';
-                    echo '<h6 class="preview-subject font-weight-normal mb-1">' . $notification['sender'] . '</h6>';
-                    echo '<p class="text-gray ellipsis mb-0">' . $notification['message'] . '</p>';
-                    echo '<button class="btn btn-danger" onclick="this.closest(\'.col-lg-12.grid-margin.stretch-card\').remove()">Delete</button>';
-                    echo '</div>';
-                }
-            } else {
-                // No notifications
-                echo '<p class="text-center">No notifications</p>';
-            }
-            ?>
-        </div>
-    </div>
-</div>
-            
-          
-                
-            
-               
-                  
-                     
+<?php
+ob_start(); 
+$error = ''; // Variable to store error messages
+while ($row = $resultNotifications->fetch_assoc()) {
+    echo '
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card table-striped">
+                <div class="card-body">
+                    <p>Sender: ' . $row['sender'] . '</p>
+                    <p>Message: ' . $row['message'] . '</p>
+                    <p>Created at: ' . $row['created_at'] . '</p>
                     
-                   
-                 
-            
-      
+                    <!-- Form for the delete button -->
+                    <form method="post" action="">
+                        <button type="submit" class="btn btn-danger float-right" name="deleteNotification" value="' . $row['id'] . '">
+                            Delete
+                        </button>
+                    </form>
+                    
+                    <!-- Additional attributes from the notification table -->
+                    <p>Notification ID: ' . $row['id'] . '</p>
+                </div>
+            </div>
+        </div>
+    </div>';
+}
+
+if (isset($_POST['deleteNotification'])) {
+  $notificationIdToDelete = $_POST['deleteNotification'];
+
+  // Prepare the DELETE statement
+  $stmtDeleteNotification = $link->prepare("DELETE FROM notification WHERE id = ?");
+  $stmtDeleteNotification->bind_param("i", $notificationIdToDelete);
+
+  // Execute the DELETE statement
+  if ($stmtDeleteNotification->execute()) {
+      // Close the statement
+      $stmtDeleteNotification->close();
+
+      // Redirect after deletion
+      header("Location: inbox.php");
+      exit(); // Ensure the script ends here after the redirect
+  } else {
+      // Store error message in variable
+      $error = "Error deleting notification: " . $stmtDeleteNotification->error;
+  }
+}
+
+// Display error message if any
+if (!empty($error)) {
+  echo $error;
+}
+
+ob_end_flush(); // Flush the output buffer and turn off output buffering
+?>
+
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
@@ -348,22 +373,9 @@ $notificationsResult = $link->query($notificationsQuery);
             left: 100px;
         }
     </style>
-   <script>
-// JavaScript
-document.querySelectorAll('.btn-danger').forEach(function(button) {
-  button.addEventListener('click', function() {
-    // Remove the element
-    this.closest('.col-lg-12.grid-margin.stretch-card').remove();
-
-    // Check if there are any elements left
-    var elements = document.querySelectorAll('.col-lg-12.grid-margin.stretch-card');
-    if (elements.length === 0) {
-      var message = document.createElement('p');
-      message.textContent = 'No inbox message for now';
-      document.querySelector('.content-wrapper').appendChild(message);
-    }
-  });
-});
-    </script>
+    
 </body>
 </html>
+<?php
+ob_end_flush();
+?>

@@ -17,13 +17,57 @@ if ($link->connect_error) {
 // Récupérer le prénom et le nom de l'utilisateur connecté
 session_start();
 $email = $_SESSION['email'];
-
-$stmt = $link->prepare("SELECT Prenom, Nom FROM etudiants WHERE AdresseEmail = ?");
+$stmt = $link->prepare("SELECT ID, Prenom, Nom FROM etudiants WHERE AdresseEmail = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
-$stmt->bind_result($prenom, $nom);
+$stmt->bind_result($studentID, $prenom, $nom);
 $stmt->fetch();
 $stmt->close();
+
+// Use the student's ID to fetch tasks from the tachesprojet table
+$stmt = $link->prepare("SELECT ID, DescriptionTache, Echeance, EtatTache FROM tachesprojet WHERE ResponsableTacheID = ?");
+$stmt->bind_param("i", $studentID);
+$stmt->execute();
+$stmt->bind_result($taskID, $description, $echeance, $etatTache);
+
+// Handle task status update
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (isset($_POST['taskId']) && isset($_POST['newEtat'])) {
+      // Close the previous statement and result set
+      $stmt->close();
+
+      // Check if the previous state was "To Do"
+      $checkStmt = $link->prepare("SELECT EtatTache FROM tachesprojet WHERE ID = ?");
+      $checkStmt->bind_param("i", $_POST['taskId']);
+      $checkStmt->execute();
+      $checkStmt->bind_result($previousEtat);
+      $checkStmt->fetch();
+      $checkStmt->close();
+      
+      if ($previousEtat === 'To do') {
+          // Only update if the previous state was "To do"
+          $newEtat = 'In progress';
+          $updateStmt = $link->prepare("UPDATE tachesprojet SET EtatTache = ? WHERE ID = ?");
+          $updateStmt->bind_param("si", $newEtat, $_POST['taskId']);
+          $updateStmt->execute();
+          $updateStmt->close();
+      } elseif ($previousEtat === 'In progress') {
+          // Delete the task if the previous state was "In progress"
+          $deleteStmt = $link->prepare("DELETE FROM tachesprojet WHERE ID = ?");
+          $deleteStmt->bind_param("i", $_POST['taskId']);
+          $deleteStmt->execute();
+          $deleteStmt->close();
+      }
+      
+      // Re-execute the task fetching query
+      $stmt = $link->prepare("SELECT ID, DescriptionTache, Echeance, EtatTache FROM tachesprojet WHERE ResponsableTacheID = ?");
+      $stmt->bind_param("i", $studentID);
+      $stmt->execute();
+      $stmt->bind_result($taskID, $description, $echeance, $etatTache);
+
+
+    }}
+
 ?>
 <html>
     <!DOCTYPE html>
@@ -294,14 +338,20 @@ $stmt->close();
                   <h3>Tasks to Do</h3>
                   <div class="task-list">
                     <!-- List of tasks to do -->
-                    <div class="task">
-                      <h4>Dormir</h4>
-                      <p>Deadline: 12-sep</p>
-                      <input type="checkbox" class="task-anis">
-                      <div class="progress" style="display: none;">
-                        <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                    </div>
+                    <?php
+    while ($stmt->fetch()) {
+        echo "<div class='task' data-task-id='$taskID' data-task-etat='$etatTache'>";
+        echo "<h4>$description</h4>";
+        echo "<p>Deadline: $echeance</p>";
+        echo "<form method='post' action=''>"; // Use an empty action for the same page
+        echo "<input type='hidden' name='taskId' value='$taskID'>";
+        echo "<input type='hidden' name='newEtat' value='" . ($etatTache === '0' ? '1' : '0') . "'>";
+        echo "<input type='submit' value='Update'>";
+        echo "</form>";
+        echo "</div>"; // Close task div
+    }
+    $stmt->close();
+    ?>
                   </div>
                 </div>
                   <div class="task-category" id="tasks-in-progress">
@@ -323,35 +373,46 @@ $stmt->close();
                
               
               </div>
-          
               <script>
-                document.addEventListener('change', function (event) {
-                  if (event.target.classList.contains('task-anis')) {
-                    var taskElement = event.target.parentElement;
-                    var parentCategory = taskElement.parentElement.parentElement;
-                    var progressBar = taskElement.querySelector('.progress-bar');
+// Assuming you have a script tag where you handle your JavaScript
 
-                    if (parentCategory.id === 'tasks-todo') {
-                      document.getElementById('tasks-in-progress').querySelector('.task-list').appendChild(taskElement);
-                      event.target.checked = false; // Uncheck the checkbox
-                      progressBar.parentElement.style.display = 'block'; // Show the progress bar
-                    } else if (parentCategory.id === 'tasks-in-progress') {
-                      document.getElementById('tasks-completed').querySelector('.task-list').appendChild(taskElement);
-                      progressBar.parentElement.style.display = 'none'; // Hide the progress bar
-                    }
-                  }
-                });
+document.addEventListener('DOMContentLoaded', function () {
+    // Get all tasks
+    var tasks = document.querySelectorAll('.task');
 
-                document.addEventListener('input', function (event) {
-                  if (event.target.classList.contains('progress-input')) {
-                    var taskElement = event.target.parentElement;
-                    var progressBar = taskElement.querySelector('.progress-bar');
+    tasks.forEach(function (task) {
+        task.addEventListener('change', function () {
+            var taskId = task.dataset.taskId;
+            var newEtat = task.dataset.taskEtat === '0' ? '1' : '0';
 
-                    progressBar.style.width = event.target.value + '%'; // Set the progress bar width
-                    progressBar.setAttribute('aria-valuenow', event.target.value); // Set the progress bar value
-                  }
-                });
-              </script>
+            // Update the task status using a simple form submission
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'update_task_etat.php'; // Change this URL accordingly
+
+            var inputTaskId = document.createElement('input');
+            inputTaskId.type = 'hidden';
+            inputTaskId.name = 'taskId';
+            inputTaskId.value = taskId;
+
+            var inputNewEtat = document.createElement('input');
+            inputNewEtat.type = 'hidden';
+            inputNewEtat.name = 'newEtat';
+            inputNewEtat.value = newEtat;
+
+            form.appendChild(inputTaskId);
+            form.appendChild(inputNewEtat);
+
+            document.body.appendChild(form);
+            form.submit();
+        });
+    });
+});
+</script>
+          
+     
+
+
               <style>
               .task-categories {
                 display: flex;
@@ -399,42 +460,11 @@ $stmt->close();
                 width: 100%;
               }
               </style>
+     
               
 
 
 
-              <canvas id="taskProgressChart" width="400" height="200"></canvas>
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  var ctx = document.getElementById('taskProgressChart').getContext('2d');
-              
-                  var data = {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{
-                      label: 'Progression des Tâches',
-                      data: [10, 20, 30, 40, 50, 60], // Remplacez ces données par les vôtres
-                      backgroundColor: 'rgba(75, 192, 192, 0.2)', // Couleur de remplissage
-                      borderColor: 'rgba(75, 192, 192, 1)', // Couleur de la bordure
-                      borderWidth: 1, // Largeur de la bordure
-                    }],
-                  };
-              
-                  var options = {
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        max: 100, // Plage de valeurs de 0 à 100 (ou ajustez selon vos besoins)
-                      },
-                    },
-                  };
-              
-                  var myChart = new Chart(ctx, {
-                    type: 'line', // Type de graphique (par exemple, 'line' pour un graphique en ligne)
-                    data: data,
-                    options: options,
-                  });
-                });
-              </script>
               
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->

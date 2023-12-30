@@ -264,77 +264,62 @@ $result = $link->query($sql);
           </ul>
         </nav>
         <!-- partial -->
+        
         <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title">
-                
-                
-              </h3>
-              <nav aria-label="breadcrumb">
-                <ul class="breadcrumb">
-                  <li class="breadcrumb-item active" aria-current="page">
-                    
-                  </li>
-                </ul>
-              </nav>
-            </div>
           
-                
-                
-               
-                  <div class="row">
-                   
-                    <div class="col-lg-12 grid-margin stretch-card">
-                      <div class="card table-striped">
-                        <div class="card-body">
-                          <h4 class="card-title">Students:</h4>
-                     
-                          </p>
-                          <table class="table table-striped wide-table">
-    <thead>
-        <tr>
-            <th>Encadreur First Name</th>
-            <th>Project</th>
-            <th>Encadreur's PDF</th>
-            <th>Student's PDF</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Boucler à travers les résultats de la base de données et générer des lignes de tableau
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $row['EncadreurFirstName'] . "</td>";
-            echo "<td>" . $row['description'] . "</td>";
-            echo "<td><a href='" . $row['encadreur_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
-            echo "<td><a href='" . $row['etudiant_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
-            echo "</tr>";
-        }
-        ?>
-    </tbody>
-</table>
-                        </div>
-                      </div>
-                    </div>
-                    
-                     
-                    
-                   
-                  </div>
-                </div>
+            <div class="content-wrapper">
+              
+              <div class="page-header">
             
-      
-          </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
+                
+                
+              </div>
+              
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card table-striped">
+                  <div class="card-body">
+                    <h4 class="card-title">Students:</h4>
+              
+                    </p>
+                    <table class="table table-striped wide-table">
+      <thead>
+          <tr>
+              <th>Encadreur First Name</th>
+              <th>Project</th>
+              <th>Project detail</th>
+              
+              <th>Submit</th>
+          </tr>
+      </thead>
+      <tbody>
+          <?php
+          // Loop through the database results and generate table rows
+          while ($row = $result->fetch_assoc()) {
+              echo "<tr>";
+              echo "<td>" . $row['EncadreurFirstName'] . "</td>";
+              echo "<td>" . $row['description'] . "</td>";
+              echo "<td><a href='" . $row['encadreur_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
+              echo "<td><a href='" . $row['etudiant_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Send PDF</a></td>";
+              echo "</tr>";
+          }
+          ?>
+      </tbody>
+  </table>
+                  </div>
+                  
+                </div>
+                
+            </div>
+            
+            <!-- content-wrapper ends -->
+            <!-- partial:partials/_footer.html -->
           
-          <!-- partial -->
+            <!-- partial -->
+          </div>
+          <!-- main-panel ends -->
         </div>
-        <!-- main-panel ends -->
+        <!-- page-body-wrapper ends -->
       </div>
-      <!-- page-body-wrapper ends -->
-    </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="../Encadreur/assets/vendors/js/vendor.bundle.base.js"></script>
