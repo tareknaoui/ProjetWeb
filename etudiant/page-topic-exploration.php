@@ -2,10 +2,10 @@
 // ... (your existing code)
 
 // Establish a database connection (replace with your database credentials)
-$host = "localhost";
+$host = "localhost:3307";
 $user = "root";
 $password = "";
-$database = "projetweb";
+$database = "web";
 
 $link = new mysqli($host, $user, $password, $database);
 

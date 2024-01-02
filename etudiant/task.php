@@ -2,10 +2,10 @@
 // ... (your existing code)
 
 // Establish a database connection (replace with your database credentials)
-$host = "localhost";
+$host = "localhost:3307";
 $user = "root";
 $password = "";
-$database = "projetweb";
+$database = "web";
 
 $link = new mysqli($host, $user, $password, $database);
 
@@ -25,11 +25,11 @@ $stmt->fetch();
 $stmt->close();
 
 // Use the student's ID to fetch tasks from the tachesprojet table
-$stmt = $link->prepare("SELECT ID, DescriptionTache, Echeance, EtatTache FROM tachesprojet WHERE ResponsableTacheID = ?");
-$stmt->bind_param("i", $studentID);
-$stmt->execute();
-$stmt->bind_result($taskID, $description, $echeance, $etatTache);
-
+$stmtTasks = $link->prepare("SELECT * FROM tachesprojet WHERE ResponsableTacheID = (SELECT ID FROM etudiants WHERE AdresseEmail = ?)");
+$stmtTasks->bind_param("s", $email);
+$stmtTasks->execute();
+$resultTasks = $stmtTasks->get_result();
+$stmtTasks->close();
 
 
 
@@ -280,50 +280,47 @@ $stmt->bind_result($taskID, $description, $echeance, $etatTache);
               
             </div>
             
-            <div class="col-lg-12 grid-margin stretch-card">
-         
-            
-                  </p>
-                  <?php
-
-                  if ($stmt->num_rows > 0) {
-                    echo'              <div class="card table-striped">';
-                    echo'<div class="card-body">';
-                    echo' <h4 class="card-title">Students:</h4>
-                    ';
-                    echo '<table class="table table-striped wide-table">';
-                    echo '<thead>
+        <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">My Tasks</h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                          <th>Task</th>
-                          <th>Dead-line</th>
-                          <th>Status</th>
-                          <th>Update</th>
+                            <th> Task ID </th>
+                            <th> Description </th>
+                            <th> Due Date </th>
+                            <th> Status </th>
                         </tr>
-                        </thead>
-                        <tbody>';
-
-                    // Loop through the database results and generate table rows
-                    while ($stmt->fetch()) {
-                      echo "<tr>";
-                      echo "<td>$description</td>";
-                      echo "<td>$echeance</td>";
-                      echo "<td><span class='task-status " . ($etatTache === 'To do' ? 'status-todo' : 'status-inprogress') . "'>$etatTache</span></td>";
-                      echo "<td>";
-                      echo "<form method='post' action=''>"; // Use an empty action for the same page
-                      echo "<input type='hidden' name='taskId' value='$taskID'>";
-                      echo "<input type='hidden' name='newEtat' value='" . ($etatTache === 'To do' ? 'In progress' : 'To do') . "'>";
-                      echo "<input type='submit' value='Update' class='btn btn-primary'>";
-                      echo "</form>";
-                      echo "</td>";
-                      echo "</tr>";
-                    }
-
-                    echo '</tbody></table>';
-                  } else {
-                    echo '<div class="no-results">No in a project yet.</div>';
-                  }
-                  $stmt->close();
-                  ?>
+                    </thead>
+                    <tbody>
+                    <?php
+    if ($resultTasks->num_rows > 0) {
+        // Loop through the database results and generate table rows
+        while ($row = $resultTasks->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . $row['ID'] . "</td>";
+            echo "<td>" . $row['DescriptionTache'] . "</td>";
+            echo "<td>" . $row['Echeance'] . "</td>";
+            echo "<td>" . $row['EtatTache'] . "</td>";
+            echo "<td>";
+            echo "<form method='post' action=''>"; // Use an empty action for the same page
+            echo "<input type='hidden' name='taskId' value='" . $row['ID'] . "'>";
+            echo "<input type='hidden' name='newEtat' value='" . ($row['EtatTache'] === 'To do' ? 'In progress' : 'To do') . "'>";
+            echo "<input type='submit' value='Update' class='btn btn-primary'>";
+            echo "</form>";
+            echo "</td>";
+            echo "</tr>";
+        }
+    } else {
+        echo '<tr><td colspan="5">No tasks found.</td></tr>';
+    }
+    ?>
+</tbody>
+                </table>
+            </div>
+        </div>
+    </div>
                 </div>
                 
               </div>
