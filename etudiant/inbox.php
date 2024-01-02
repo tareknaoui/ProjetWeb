@@ -72,18 +72,9 @@ $resultNotifications = $stmtNotifications->get_result();
 }
         </style>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="mdi mdi-menu"></span>
-          </button>
+         
           <div class="search-field d-none d-md-block">
-            <form class="d-flex align-items-center h-100" action="#">
-              <div class="input-group">
-                <div class="input-group-prepend bg-transparent">
-                  <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                </div>
-                <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
-              </div>
-            </form>
+        
           </div>
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
@@ -264,28 +255,23 @@ $resultNotifications = $stmtNotifications->get_result();
         </nav>
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
+        <div class="page-header">
               <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
                   <i class="mdi mdi-settings"></i>
                 </span> Topic exploration
-                
-              </h3>
-              <nav aria-label="breadcrumb">
-                <ul class="breadcrumb">
-                  <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                  </li>
-                </ul>
-              </nav>
+              </h3>   
             </div>
+          <div class="content-wrapper">
+            <div class="page-header">
+          
 <?php
 ob_start(); 
 $error = ''; // Variable to store error messages
-while ($row = $resultNotifications->fetch_assoc()) {
+if ($resultNotifications->num_rows > 0) {
+  while ($row = $resultNotifications->fetch_assoc()) {
     echo '
-    <div class="row">
+    <div class="row notification-row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card table-striped">
                 <div class="card-body">
@@ -306,10 +292,14 @@ while ($row = $resultNotifications->fetch_assoc()) {
             </div>
         </div>
     </div>';
+  }
+}
+ else {
+  echo '<div class="no-results">No notifications found.</div>';
 }
 
 if (isset($_POST['deleteNotification'])) {
-  $notificationIdToDelete = $_POST['deleteNotification'];
+  $notificationIdToDelete = $_POST['deleteNotification']; // Correct variable name
 
   // Prepare the DELETE statement
   $stmtDeleteNotification = $link->prepare("DELETE FROM notification WHERE id = ?");
@@ -372,6 +362,22 @@ ob_end_flush(); // Flush the output buffer and turn off output buffering
             position: relative;
             left: 100px;
         }
+        .no-results {
+    font-size: 2em; /* Make the text larger */
+    color: white; /* Change the text color */
+    text-align: center; /* Center the text */
+    margin-top: 50px; /* Add some space at the top */
+    width: 100%; /* Full width */
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+  }
+  .notification-row {
+    margin-bottom: 20px;
+  }
+
+
     </style>
     
 </body>

@@ -1,80 +1,44 @@
-  <?php
-  // Establish a database connection (replace with your database credentials)
-  $host = "localhost";
-  $user = "root";
-  $password = "";
-  $database = "projetweb";
+<?php
+session_start(); 
 
-  $link = new mysqli($host, $user, $password, $database);
+$host = "localhost";
+$user = 'root';
+$pass = '';
+$db = 'projetweb';
 
-  // Check the connection
-  if ($link->connect_error) {
-    die("Connection failed: " . $link->connect_error);
-  }
+$link = mysqli_connect($host, $user, $pass, $db);
 
-  // Récupérer le prénom et le nom de l'utilisateur connecté
-  session_start();
-  $email = $_SESSION['email'];
+if (mysqli_connect_error()) {
+  die("Connection failed");
+}
 
-  $stmt = $link->prepare("SELECT Prenom, Nom FROM etudiants WHERE AdresseEmail = ?");
-  $stmt->bind_param("s", $email);
-  $stmt->execute();
-  $stmt->bind_result($prenom, $nom);
-  $stmt->fetch();
-  $stmt->close();
+$email = $_SESSION['email'];
+$stmtUser = $link->prepare("SELECT Prenom, Nom FROM admin WHERE AdresseEmail = ?");
+$stmtUser->bind_param("s", $email);
+$stmtUser->execute();
+$stmtUser->bind_result($prenom, $nom);
+$stmtUser->fetch();
+$stmtUser->close();
 
-  // Fetch student id
-  $stmtStudentId = $link->prepare("SELECT ID FROM etudiants WHERE AdresseEmail = ?");
-  $stmtStudentId->bind_param("s", $email);
-  $stmtStudentId->execute();
-  $resultStudentId = $stmtStudentId->get_result();
-  $studentData = $resultStudentId->fetch_assoc();
-  $studentId = isset($studentData['ID']) ? $studentData['ID'] : null;
-  $stmtStudentId->close();
+$stmt1 = $link->prepare("SELECT COUNT(*) AS count FROM etudiants");
+$stmt1->execute();
+$result1 = $stmt1->get_result();
+$studentCount = $result1->fetch_assoc()['count'];
 
-  // Fetch project id
-  $stmtProjectId = $link->prepare("SELECT p.ID 
-          FROM etudiants et 
-          JOIN equipesprojet eq ON et.IdEquipe = eq.ID 
-          JOIN projet p ON eq.ProjetID = p.ID
-          WHERE et.AdresseEmail = ?");
-  $stmtProjectId->bind_param("s", $email);
-  $stmtProjectId->execute();
-  $resultProjectId = $stmtProjectId->get_result();
-  $projectData = $resultProjectId->fetch_assoc();
-  $projectId = isset($projectData['ID']) ? $projectData['ID'] : null;
-  $stmtProjectId->close();
+$stmt2 = $link->prepare("SELECT COUNT(*) AS count FROM encadreurs");
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$supervisorCount = $result2->fetch_assoc()['count'];
+$stmtStudents = $link->prepare("SELECT * FROM etudiants");
+$stmtStudents->execute();
+$resultStudents = $stmtStudents->get_result();
 
-  // Fetch team members
-  $stmtTeamMembers = $link->prepare("SELECT et.ID, et.Nom, et.Prenom 
-  FROM etudiants et 
-  JOIN equipesprojet eq ON et.IdEquipe = eq.ID 
-  WHERE eq.ID = (SELECT IdEquipe FROM etudiants WHERE AdresseEmail = ?)");
-$stmtTeamMembers->bind_param("s", $email);
-$stmtTeamMembers->execute();
-$resultTeamMembers = $stmtTeamMembers->get_result();
-$stmtTeamMembers->close();
-
-  // Retrieve data from the 'sujet' table, including encadreur's first name
-  $sql = "SELECT e.Prenom AS EncadreurFirstName, s.description, s.theme, s.encadreur_fichier_pdf 
-      FROM sujet s
-      INNER JOIN encadreurs e ON s.encadreur_id = e.ID";
-  $result = $link->query($sql);
-
-  // Fetch notifications
-  $stmtNotifications = $link->prepare("SELECT id, message, created_at FROM notification WHERE etudiant_id = ?");
-  $stmtNotifications->bind_param("i", $studentId);
-  $stmtNotifications->execute();
-  $resultNotifications = $stmtNotifications->get_result();
-  $stmtNotifications->close();
-
-  // Fetch tasks
-  $stmtTasks = $link->prepare("SELECT * FROM tachesprojet WHERE ResponsableTacheID = (SELECT ID FROM etudiants WHERE AdresseEmail = ?)");
-  $stmtTasks->bind_param("s", $email);
-  $stmtTasks->execute();
-  $resultTasks = $stmtTasks->get_result();
-  $stmtTasks->close();
-  ?>
+// Fetch supervisors
+$stmtSupervisors = $link->prepare("SELECT * FROM encadreurs");
+$stmtSupervisors->execute();
+$resultSupervisors = $stmtSupervisors->get_result();
+  
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -141,8 +105,10 @@ $stmtTeamMembers->close();
                   <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="../Impact/index.html">
-                  <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
-              </div>
+                <a href="../Login&Register/logout.php">
+    <i class="mdi mdi-logout me-2 text-primary"></i> Signout 
+            </a>              <
+      </div>
             </li>
             <li class="nav-item d-none d-lg-block full-screen-link">
               <a class="nav-link">
@@ -266,43 +232,17 @@ $stmtTeamMembers->close();
                   <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                <span class="font-weight-bold mb-2"><?php echo $prenom . ' ' . $nom; ?></span>
-                  <span class="text-secondary text-small">Etudiant</span>
+                <span class="font-weight-bold mb-2"><?php echo $prenom . ' ' . $nom; ?></span>                  <span class="text-secondary text-small">Admin</span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="dashboardEt.php">
+              <a class="nav-link" href="dashboardEt.html">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-           
-          
-            <li class="nav-item">
-              <a class="nav-link" href="page-topic-exploration.php">
-                <span class="menu-title"> Page Topic Exploration</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-            </li>
-       
-            <li class="nav-item">
-              <a class="nav-link" href="inbox.php">
-                <span class="menu-title">Inbox</span>
-                <i class="mdi mdi-email-outline menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="task.php">
-                <span class="menu-title">Project Progress</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-            </li>
-            
-          
-          </ul>
-        </nav>
            
           
           </ul>
@@ -327,140 +267,113 @@ $stmtTeamMembers->close();
               
             </div>
             <div class="col-lg-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">List of Topics</h4>
-                  <div class="table-responsive">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th> Supervisor First Name </th>
-                          <th> Description </th>
-                          <th> Theme </th>
-                          <th> PDF </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php
-                        if ($result->num_rows > 0) {
-                          // Loop through the database results and generate table rows
-                          while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row['EncadreurFirstName'] . "</td>";
-                            echo "<td>" . $row['description'] . "</td>";
-                            echo "<td>" . $row['theme'] . "</td>";
-                            echo "<td><a href='" . $row['encadreur_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
-                            echo "</tr>";
-                          }
-                        } else {
-                          echo '<tr><td colspan="4">No topics found.</td></tr>';
-                        }
-                        ?>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-6 grid-margin stretch-card">
-                  <div class="card">
-                    <div class="card-body">
-                      <h4 class="card-title">Notifications</h4>
-                      <div class="table-responsive">
-                        <table class="table table-striped">
-                          <thead>
-                            <tr>
-                              <th> Notification ID </th>
-                              <th> Notification Text </th>
-                              <th> Date </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <?php
-                           if ($resultNotifications->num_rows > 0) {
-                            // Loop through the database results and generate table rows
-                            while ($row = $resultNotifications->fetch_assoc()) {
-                              echo "<tr>";
-                              echo "<td>" . (isset($row['id']) ? $row['id'] : '') . "</td>";
-                              echo "<td>" . (isset($row['message']) ? $row['message'] : '') . "</td>";
-                              echo "<td>" . (isset($row['created_at']) ? $row['created_at'] : '') . "</td>";
-                              echo "</tr>";
-                            }
-                          } else {
-                            echo '<tr><td colspan="3">No notifications found.</td></tr>';
-                          }
-                            ?>
-                          </tbody>
-                        </table>
-                      </div>
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Registration Summary</h4>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th> Role </th>
+                            <th> Number of Registrations </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+    <tr>
+        <td> Students </td>
+        <td id="studentCount"> <?php echo $studentCount; ?> </td>
+    </tr>
+    <tr>
+        <td> Supervisors </td>
+        <td id="supervisorCount"> <?php echo $supervisorCount; ?> </td>
+    </tr>
+</tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
+              </div>
+            <div class="row">
                 <div class="col-lg-6 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">My Tasks</h4>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th> Task ID </th>
-                            <th> Description </th>
-                            <th> Due Date </th>
-                            <th> Status </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if ($resultTasks->num_rows > 0) {
-                            // Loop through the database results and generate table rows
-                            while ($row = $resultTasks->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row['ID'] . "</td>";
-                                echo "<td>" . $row['DescriptionTache'] . "</td>";
-                                echo "<td>" . $row['Echeance'] . "</td>";
-                                echo "<td>" . $row['EtatTache'] . "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo '<tr><td colspan="4">No tasks found.</td></tr>';
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Registration Chart</h4>
+                            <canvas id="registrationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 grid-margin stretch-card">
+                    <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Monthly Connections</h4>
+                        <canvas id="connectionsChart"></canvas>
+                    </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Usernames</h4>
-                  <table id="usernamesTable" class="table">
+                  <!-- Students table -->
+                  <table id="studentsTable" class="table">
                     <thead>
                       <tr>
                         <th>Student Usernames</th>
                         <th></th>
                         <th></th>
-                    
+                        <th></th>
+                        <th></th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php
-                      while ($etudiant = $resultTeamMembers->fetch_assoc()) {
+                      while ($student = $resultStudents->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $etudiant['Nom'] . " " . $etudiant['Prenom'] . "</td>";
+                        echo "<td>" . $student['Nom'] . " " . $student['Prenom'] . "</td>";
+                        echo "<td><button class='btn btn-danger delete-btn' data-id='" . $student['ID'] . "'>Delete</button></td>";
                         echo "<td> </td>";
-                     
+                        echo "<td> </td>";
+                        echo "<td> </td>";
                         echo "</tr>";
                       }
+                      $stmtStudents->close();
+                      ?>
+                    </tbody>
+                  </table>
+
+                  <!-- Supervisors table -->
+                  <table id="supervisorsTable" class="table">
+                    <thead>
+                      <tr>
+                        <th >Supervisor Usernames</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                      while ($supervisor = $resultSupervisors->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $supervisor['Nom'] . " " . $supervisor['Prenom'] . "</td>";
+                        echo "<td><button class='btn btn-danger delete-btn' data-id='" . $supervisor['ID'] . "'>Delete</button></td>";
+                        echo "<td> </td>";
+                        echo "<td> </td>";
+                        echo "<td> </td>";
+                        echo "</tr>";
+                      }
+                      $stmtSupervisors->close();
                       ?>
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
+
             
           </div>
           

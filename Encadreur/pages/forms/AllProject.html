@@ -194,12 +194,19 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-           
             <li class="nav-item">
-              <a class="nav-link" href="../../pages/forms/AllProject.html">
-                <span class="menu-title">Project Viewing Page</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+                <span class="menu-title">Project </span>
+                <i class="menu-arrow"></i>
+                <i class="mdi mdi-medical-bag menu-icon"></i>
               </a>
+              <div class="collapse" id="general-pages">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="../../pages/forms/AddProject.html"> Add Project </a></li>
+                  <li class="nav-item"> <a class="nav-link" href="../../pages/forms/AllProject.html"> All Project </a></li>
+
+                </ul>
+              </div>
             </li>
             
             <li class="nav-item">
@@ -235,7 +242,7 @@
               <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">My Projects</h4>
+                    <h4 class="card-title">My Topics</h4>
                    
                     <div class="table-responsive">
                       <table class="table">
@@ -263,36 +270,6 @@
                               <!-- Ajoutez plus de lignes de projet au besoin -->
                           </tbody>
                       </table>
-                      <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a Project</button>
-  
-                      <div class="modal" id="addProjectModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">Add a Project</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <!-- Formulaire pour ajouter un sujet -->
-                              <form id="addProjectForm">
-                                <div class="mb-3">
-                                  <label for="ProjectTitle" class="form-label">Project Title</label>
-                                  <input type="text" class="form-control" id="ProjectTitle" required>
-                                </div>
-                                <div class="mb-3">
-                                  <label for="ProjectDescription" class="form-label"> Description</label>
-                                  <textarea class="form-control" id="ProjectDescription" rows="3" required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-gradient-primary">Add Project</button>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <button class="btn btn-danger mb-2" id="deleteProjectBtn">Supprimer un Projet</button>
-
                       <!-- Bouton "Add Project" en bas du tableau -->
                       
                   </div>
@@ -333,57 +310,10 @@
     <!-- inject:js -->
     <script src="../../assets/js/off-canvas.js"></script>
     <script src="../../assets/js/hoverable-collapse.js"></script>
-    
-    <script>
-      // Attend que le document soit prêt
-      $(document).ready(function() {
-        // Gère le clic sur le bouton "+ Add a Project"
-        $('button.btn-gradient-primary').click(function() {
-          // Affiche la fenêtre modale pour ajouter un sujet
-          $('#addProjectModal').modal('show');
-        });
-
-        // Gère la soumission du formulaire
-        $('#addProjectForm').submit(function(event) {
-          // Empêche le comportement par défaut du formulaire (rechargement de la page)
-          event.preventDefault();
-
-          // Récupère les valeurs du formulaire
-          var ProjectTitle = $('#ProjectTitle').val();
-          var ProjectDescription = $('#ProjectDescription').val();
-
-          // Effectuez toute validation nécessaire ici
-
-          // Ajoute le nouveau sujet au tableau
-          addProjectToTable(ProjectTitle, ProjectDescription);
-
-          // Réinitialise le formulaire
-          $('#addProjectForm')[0].reset();
-
-          // Ferme la fenêtre modale
-          $('#addProjectModal').modal('hide');
-        });
-
-        // Fonction pour ajouter un nouveau sujet au tableau
-        function addProjectToTable(title, description) {
-          // Récupère le corps du tableau
-          var tableBody = $('.table tbody');
-
-          // Crée une nouvelle ligne de tableau
-          var newRow = tableBody.append('<tr></tr>').children('tr:last');
-
-          // Ajoute les cellules avec les détails du sujet
-          newRow.append('<td>' + title + '</td>');
-          newRow.append('<td>' + description + '</td>');
-          newRow.append('<td><label class="badge badge-gradient-success">New</label></td>');
-          newRow.append('<td>Now</td>');
-          newRow.append('<td>None yet</td>');
-
-          // Vous pouvez également effectuer des actions supplémentaires, telles que la mise à jour du serveur avec le nouveau sujet
-        }
-      });
-    </script>
-    
+    <script src="../../assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="../../assets/js/chart.js"></script>
     <!-- End custom js for this page -->
   </body>
 </html>

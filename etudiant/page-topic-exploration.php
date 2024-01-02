@@ -72,18 +72,9 @@ $result = $link->query($sql);
 }
         </style>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="mdi mdi-menu"></span>
-          </button>
+          
           <div class="search-field d-none d-md-block">
-            <form class="d-flex align-items-center h-100" action="#">
-              <div class="input-group">
-                <div class="input-group-prepend bg-transparent">
-                  <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                </div>
-                <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
-              </div>
-            </form>
+            
           </div>
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
@@ -276,35 +267,41 @@ $result = $link->query($sql);
               </div>
               
               <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card table-striped">
-                  <div class="card-body">
-                    <h4 class="card-title">Students:</h4>
+           
+                
               
                     </p>
-                    <table class="table table-striped wide-table">
-      <thead>
-          <tr>
-              <th>Encadreur First Name</th>
-              <th>Project</th>
-              <th>Project detail</th>
-              
-              <th>Submit</th>
-          </tr>
-      </thead>
-      <tbody>
-          <?php
-          // Loop through the database results and generate table rows
-          while ($row = $result->fetch_assoc()) {
-              echo "<tr>";
-              echo "<td>" . $row['EncadreurFirstName'] . "</td>";
-              echo "<td>" . $row['description'] . "</td>";
-              echo "<td><a href='" . $row['encadreur_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
-              echo "<td><a href='" . $row['etudiant_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Send PDF</a></td>";
-              echo "</tr>";
-          }
-          ?>
-      </tbody>
-  </table>
+                    <?php
+                    if ($result->num_rows > 0) {
+                      echo'    <div class="card table-striped">';
+                      echo'  <div class="card-body">';
+                      echo'  <h4 class="card-title">Students:</h4>';
+                      echo '<table class="table table-striped wide-table">';
+                      echo '<thead>
+                          <tr>
+                            <th>Encadreur First Name</th>
+                            <th>Project</th>
+                            <th>Project detail</th>
+                            <th>Submit</th>
+                          </tr>
+                          </thead>
+                          <tbody>';
+
+                      // Loop through the database results and generate table rows
+                      while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['EncadreurFirstName'] . "</td>";
+                        echo "<td>" . $row['description'] . "</td>";
+                        echo "<td><a href='" . $row['encadreur_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
+                        echo "<td><a href='" . $row['etudiant_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Send PDF</a></td>";
+                        echo "</tr>";
+                      }
+
+                      echo '</tbody></table>';
+                    } else {
+                      echo '<div class="no-results">No results found.</div>';
+                    }
+                    ?>
                   </div>
                   
                 </div>
@@ -338,4 +335,17 @@ $result = $link->query($sql);
     <script src="../Encadreur/assets/js/todolist.js"></script>
     <!-- End custom js for this page -->
   </body>
+  <style>
+  .no-results {
+    font-size: 2em; /* Make the text larger */
+    color: white; /* Change the text color */
+    text-align: center; /* Center the text */
+    margin-top: 50px; /* Add some space at the top */
+    width: 100%; /* Full width */
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+  }
+  </style>
 </html>

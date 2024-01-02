@@ -23,14 +23,16 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Récupérer les autres données du formulaire
-    $title = $_POST["title"];
-    $description = $_POST["description"];
+    $titlee = $_POST["title"];
+    $descriptionn = $_POST["description"];
 
-    // Récupérer l'UserID depuis la session
+    echo"$titlee";
+    echo"$descriptionn";
+
 
     // Préparer et lier l'instruction SQL
-    $stmt = $conn->prepare("INSERT INTO sujet ( encadreur_id, description, theme) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssi", $ID,$description,$title);
+    $stmt = $conn->prepare("INSERT INTO projet (TitreProjet,DescriptionProjet,EncadreurID) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $titlee,$descriptionn,$ID);
 
     // Exécuter l'instruction
     if ($stmt->execute()) {

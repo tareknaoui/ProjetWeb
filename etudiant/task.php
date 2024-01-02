@@ -30,43 +30,9 @@ $stmt->bind_param("i", $studentID);
 $stmt->execute();
 $stmt->bind_result($taskID, $description, $echeance, $etatTache);
 
-// Handle task status update
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (isset($_POST['taskId']) && isset($_POST['newEtat'])) {
-      // Close the previous statement and result set
-      $stmt->close();
-
-      // Check if the previous state was "To Do"
-      $checkStmt = $link->prepare("SELECT EtatTache FROM tachesprojet WHERE ID = ?");
-      $checkStmt->bind_param("i", $_POST['taskId']);
-      $checkStmt->execute();
-      $checkStmt->bind_result($previousEtat);
-      $checkStmt->fetch();
-      $checkStmt->close();
-      
-      if ($previousEtat === 'To do') {
-          // Only update if the previous state was "To do"
-          $newEtat = 'In progress';
-          $updateStmt = $link->prepare("UPDATE tachesprojet SET EtatTache = ? WHERE ID = ?");
-          $updateStmt->bind_param("si", $newEtat, $_POST['taskId']);
-          $updateStmt->execute();
-          $updateStmt->close();
-      } elseif ($previousEtat === 'In progress') {
-          // Delete the task if the previous state was "In progress"
-          $deleteStmt = $link->prepare("DELETE FROM tachesprojet WHERE ID = ?");
-          $deleteStmt->bind_param("i", $_POST['taskId']);
-          $deleteStmt->execute();
-          $deleteStmt->close();
-      }
-      
-      // Re-execute the task fetching query
-      $stmt = $link->prepare("SELECT ID, DescriptionTache, Echeance, EtatTache FROM tachesprojet WHERE ResponsableTacheID = ?");
-      $stmt->bind_param("i", $studentID);
-      $stmt->execute();
-      $stmt->bind_result($taskID, $description, $echeance, $etatTache);
 
 
-    }}
+
 
 ?>
 <html>
@@ -119,18 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </style>
     
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="mdi mdi-menu"></span>
-          </button>
+        
           <div class="search-field d-none d-md-block">
-            <form class="d-flex align-items-center h-100" action="#">
-              <div class="input-group">
-                <div class="input-group-prepend bg-transparent">
-                  <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                </div>
-                <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
-              </div>
-            </form>
+           
 
           </div>
           <ul class="navbar-nav navbar-nav-right">
@@ -314,153 +271,154 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </nav>
         <!-- partial -->
         <div class="main-panel">
+          
           <div class="content-wrapper">
+            
             <div class="page-header">
-              <h3 class="page-title">
-                <span class="page-title-icon bg-gradient-primary text-white me-2">
-                  <i class="mdi mdi-home"></i>
-                </span> Task Progress
-                
-              </h3>
-              <nav aria-label="breadcrumb">
-                <ul class="breadcrumb">
-                  <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                  </li>
-                </ul>
-              </nav>
+          
+              
+              
             </div>
             
-                
-          
-              <div class="task-categories">
-                <div class="task-category" id="tasks-todo">
-                  <h3>Tasks to Do</h3>
-                  <div class="task-list">
-                    <!-- List of tasks to do -->
-                    <?php
-    while ($stmt->fetch()) {
-        echo "<div class='task' data-task-id='$taskID' data-task-etat='$etatTache'>";
-        echo "<h4>$description</h4>";
-        echo "<p>Deadline: $echeance</p>";
-        echo "<form method='post' action=''>"; // Use an empty action for the same page
-        echo "<input type='hidden' name='taskId' value='$taskID'>";
-        echo "<input type='hidden' name='newEtat' value='" . ($etatTache === '0' ? '1' : '0') . "'>";
-        echo "<input type='submit' value='Update'>";
-        echo "</form>";
-        echo "</div>"; // Close task div
-    }
-    $stmt->close();
-    ?>
-                  </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+         
+            
+                  </p>
+                  <?php
+
+                  if ($stmt->num_rows > 0) {
+                    echo'              <div class="card table-striped">';
+                    echo'<div class="card-body">';
+                    echo' <h4 class="card-title">Students:</h4>
+                    ';
+                    echo '<table class="table table-striped wide-table">';
+                    echo '<thead>
+                        <tr>
+                          <th>Task</th>
+                          <th>Dead-line</th>
+                          <th>Status</th>
+                          <th>Update</th>
+                        </tr>
+                        </thead>
+                        <tbody>';
+
+                    // Loop through the database results and generate table rows
+                    while ($stmt->fetch()) {
+                      echo "<tr>";
+                      echo "<td>$description</td>";
+                      echo "<td>$echeance</td>";
+                      echo "<td><span class='task-status " . ($etatTache === 'To do' ? 'status-todo' : 'status-inprogress') . "'>$etatTache</span></td>";
+                      echo "<td>";
+                      echo "<form method='post' action=''>"; // Use an empty action for the same page
+                      echo "<input type='hidden' name='taskId' value='$taskID'>";
+                      echo "<input type='hidden' name='newEtat' value='" . ($etatTache === 'To do' ? 'In progress' : 'To do') . "'>";
+                      echo "<input type='submit' value='Update' class='btn btn-primary'>";
+                      echo "</form>";
+                      echo "</td>";
+                      echo "</tr>";
+                    }
+
+                    echo '</tbody></table>';
+                  } else {
+                    echo '<div class="no-results">No in a project yet.</div>';
+                  }
+                  $stmt->close();
+                  ?>
                 </div>
-                  <div class="task-category" id="tasks-in-progress">
-                    <h3>Tasks in Progress</h3>
-                    <div class="task-list">
-                    
-                      <!-- ... rest of your tasks ... -->
-                    </div>
-                  </div>
-                  <div class="task-category" id="tasks-completed">
-                    <h3>Completed Tasks</h3>
-                    <div class="task-list">
-                      <!-- List of completed tasks -->
-                    </div>
-                  </div>
                 
               </div>
-                
-               
               
-              </div>
-              <script>
-// Assuming you have a script tag where you handle your JavaScript
+          </div>
+          
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+        
+          <!-- partial -->
+        </div>
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Get all tasks
-    var tasks = document.querySelectorAll('.task');
 
-    tasks.forEach(function (task) {
-        task.addEventListener('change', function () {
-            var taskId = task.dataset.taskId;
-            var newEtat = task.dataset.taskEtat === '0' ? '1' : '0';
+</div>
+<!-- Include jQuery -->
 
-            // Update the task status using a simple form submission
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'update_task_etat.php'; // Change this URL accordingly
-
-            var inputTaskId = document.createElement('input');
-            inputTaskId.type = 'hidden';
-            inputTaskId.name = 'taskId';
-            inputTaskId.value = taskId;
-
-            var inputNewEtat = document.createElement('input');
-            inputNewEtat.type = 'hidden';
-            inputNewEtat.name = 'newEtat';
-            inputNewEtat.value = newEtat;
-
-            form.appendChild(inputTaskId);
-            form.appendChild(inputNewEtat);
-
-            document.body.appendChild(form);
-            form.submit();
-        });
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $(".btn-primary").click(function(e){
+    e.preventDefault();
+    var taskId = $(this).siblings('input[name="taskId"]').val();
+    
+    var newEtat = $(this).siblings('input[name="newEtat"]').val();
+    $.ajax({
+      url: 'update_task.php',
+      type: 'post',
+      data: {taskId: taskId, newEtat: newEtat},
+      success: function(response){
+        location.reload(); // Reload the page to see the changes
+      }
     });
+  });
 });
 </script>
+
+
           
      
 
 
               <style>
-              .task-categories {
-                display: flex;
-                justify-content: space-between;
-              }
-              
-              .task-category {
-                flex: 2;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                margin:  0 10px;
-              }
-              
-              .task-categories {
-              display: flex;
-             justify-content: space-between;
-           
-              }
-              .task-list {
-                padding: 0;
-              }
-              
-              .task-list .task {
-                background: #f9f9f9;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                margin: 5px 0;
-                padding: 10px;
-                position: relative
-            
-              }
-              
-              .task-checkbox {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-              }
-              
-              .add-task {
-                margin: 20px 0;
-              }
-              
-              #task-progress {
-                width: 100%;
-              }
-              </style>
+                /* Style the table */
+                .table.table-striped.wide-table {
+                  width: 100%; /* Make the table take up the full width of its container */
+                }
+
+                /* Style the table headers */
+                .table.table-striped.wide-table thead th {
+                  background-color: #f8f9fa; /* Light gray background */
+                  color: #343a40; /* Dark gray text */
+                  padding: 10px; /* Add some padding */
+                  text-align: left; /* Align text to the left */
+                }
+
+                /* Style the table body */
+                .table.table-striped.wide-table tbody td {
+                  padding: 10px; /* Add some padding */
+                }
+
+                /* Style the task status */
+                .task-status {
+                  font-weight: bold; /* Make the text bold */
+                }
+
+                /* Style the 'To do' status */
+                .status-todo {
+                  color: red; /* Make the text red */
+                }
+
+                /* Style the 'In progress' status */
+                .status-inprogress {
+                  color: orange; /* Make the text orange */
+                }
+
+                /* Style the update button */
+                .btn.btn-primary {
+                  color: white; /* White text */
+                  background-color: #007bff; /* Blue background */
+                  border-color: #007bff; /* Blue border */
+                }
+                .no-results {
+    font-size: 2em; /* Make the text larger */
+    color: white; /* Change the text color */
+    text-align: center; /* Center the text */
+    margin-top: 50px; /* Add some space at the top */
+    width: 100%; /* Full width */
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+  }
      
+              </style>
+            
               
 
 
@@ -468,12 +426,7 @@ document.addEventListener('DOMContentLoaded', function () {
               
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
-          <footer class="footer">
-            <div class="container-fluid d-flex justify-content-between">
-              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
-              <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
-            </div>
-          </footer>
+      
           <!-- partial -->
         </div>
         <!-- main-panel ends -->

@@ -1,5 +1,5 @@
-
-<!DOCTYPE html>
+<html>
+    <!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -194,13 +194,14 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-            
+           
             <li class="nav-item">
-              <a class="nav-link" href="../../pages/forms/basic_elements.html">
+              <a class="nav-link" href="../../pages/forms/AllProject.html">
                 <span class="menu-title">Project Viewing Page</span>
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
             </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="../../pages/charts/chartjs.html">
                 <span class="menu-title">Topic Proposal Page</span>
@@ -209,7 +210,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../pages/tables/basic-table.html">
-                <span class="menu-title">Application Viewing</span>
+                <span class="menu-title">Condidate Viewing</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
               </a>
             </li>
@@ -219,259 +220,118 @@
                 <div class="border-bottom">
                   <h6 class="font-weight-normal mb-3">Projects</h6>
                 </div>
-                <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a project</button>
                 
               </span>
             </li>
           </ul>
         </nav>
-        <!-- partial -->
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-             
-              <!-- Table displaying all projects -->
-              <div class="row">
-                <div class="col-12 grid-margin">
-                  <div class="card">
-                    <div class="card-body">
+       <!-- partial -->
+       <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="page-header">
+           
+            <!-- Table displaying all projects -->
+            <div class="row">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">My Projects</h4>
+                   
+                    <div class="table-responsive">
+                      <table class="table">
+                          <thead>
+                              <tr>
+                                  <th>Project Name</th>
+                                  <th>Description</th>
+                                  <th>Status</th>
+                                  <th>Created On</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <?php
+                          $servername = "localhost";
+                          $username = 'root';
+                         $port = 3307; // Port modifié à 3307
+                         $password = '';
+                         $database = 'web';
 
-                         
-                        <div class="container">
-                            <h1 class="project-title">Projet 1</h1>
-                            <section class="project-grid">
-                                <div class="grid-item">
-                                    <h2>Description du Projet</h2>
-                                    <p>Ceci est la description détaillée du Projet 1. Vous pouvez inclure toutes les informations pertinentes concernant le projet ici.</p>
+// Créer la connexion
+                          $conn = new mysqli($servername, $username, $password, $database, $port);                  
+                              // Check the connection
+                              if ($conn->connect_error) {
+                                  die("Connection failed: " . $conn->connect_error);
+                              }
+                  
+                              // Run the query
+                              $sql = "SELECT * from projet";
+                              $result = $conn->query($sql);
+                  
+                              // Loop through the results
+                              if ($result->num_rows > 0) {
+                                  while($row = $result->fetch_assoc()) {
+                                      echo "<tr>";
+                                      echo "<td><a href='project1.php?id=" . $row["ID"] . "'>" . $row["TitreProjet"] . "</a></td>";
+                                      echo "<td>" . $row["DescriptionProjet"] . "</td>";
+                                      echo "</tr>";
+                                  }
+                              } else {
+                                  echo "0 results";
+                              }
+                  
+                              $conn->close();
+                              ?>
+                          </tbody>
+                      </table>
+                  </div>
+                  <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a Project</button>
+                  <div id="responseMessage"></div>
+
+  
+                      <div class="modal" id="addProjectModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Add a Project</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Formulaire pour ajouter un sujet -->
+                              <form id="addProjectForm">
+                                <div class="mb-3">
+                                  <label for="topicTitle" class="form-label">Projet Title</label>
+                                  <input type="text" class="form-control" id="ProjectTitle" required>
                                 </div>
-                                <div class="grid-item">
-                                    <h2>Membres du Projet</h2>
-                                    <ul class="project-members">
-                                        <li>Membre 1</li>
-                                        <li>Membre 2</li>
-                                        <li>Membre 3</li>
-                                        <!-- Ajoutez plus de membres au besoin -->
-                                    </ul>
+                                <div class="mb-3">
+                                  <label for="ProjectDescription" class="form-label"> Description</label>
+                                  <textarea class="form-control" id="ProjectDescription" rows="3" required></textarea>
                                 </div>
-                                <div class="grid-item">
-                                    <h2>État du Projet</h2>
-                                    <p>En cours</p>
-                                </div>
-                                <div class="grid-item">
-                                    <h2>Progression du Projet</h2>
-                                    <table class="project-progress-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Tâche</th>
-                                                <th>État</th>
-                                                <th>Progression</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Tâche 1</td>
-                                                <td>En cours</td>
-                                                <td>
-                                                  <div class="progress">
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-                                                  </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tâche 2</td>
-                                                <td>Terminée</td>
-                                                <td>
-                                                  <div class="progress">
-                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                </td>
-                                            </tr>
-                                            <!-- Ajoutez plus de lignes de tâches au besoin -->
-                                            
-                                        </tbody>
-                                    </table>
-                                    
-                                </div>
-                
-                                <!-- Ajoutez d'autres éléments de grille au besoin -->
-             </div>
+                                <button type="button" id="submitForm" class="btn btn-gradient-primary">Add Project</button>
+                              </form>
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                      
+                      <button class="btn btn-danger mb-2" id="deleteProjectBtn">Supprimer un Projet</button>
+
+                      <!-- Bouton "Add Project" en bas du tableau -->
+                      
+                  </div>
+                    
+                   
+                                          
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
            </div>
-           
-          <div class="test">
-            <div class="col-md-5 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h1>Membre 1 :</h1>
-                  <h4 class="card-title text-white">Todo</h4>
-                  <div class="add-items d-flex">
-                    <input type="text" class="form-control todo-list-input" placeholder="What do you need to do today?">
-                    <button class="add btn btn-gradient-primary font-weight-bold todo-list-add-btn" id="add-task">Add</button>
-                  </div>
-                  <div class="list-wrapper">
-                    <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Meeting with Alisa </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li class="completed">
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Call John </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Create invoice </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input> Print Statements </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li class="completed">
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Prepare for presentation </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Pick up kids from school </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            
-
-            <div class="col-md-5 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h1>Membre 2 :</h1>
-                  <h4 class="card-title text-white">Todo</h4>
-                  <div class="add-items d-flex">
-                    <input type="text" class="form-control todo-list-input" placeholder="What do you need to do today?">
-                    <button class="add btn btn-gradient-primary font-weight-bold todo-list-add-btn" id="add-task">Add</button>
-                  </div>
-                  <div class="list-wrapper">
-                    <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Meeting with Alisa </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li class="completed">
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Call John </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Create invoice </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input> Print Statements </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li class="completed">
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input > Prepare for presentation </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                      <li>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input> Pick up kids from school </label>
-                        </div>
-                        <i class="remove mdi mdi-close-circle-outline"></i>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-             
-
-          </div>
-          
-          
-          
-           <style>
-           /* Styles pour la grille */
-           .project-grid {
-               display: grid;
-               grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-               gap: 20px;
-           }
-           .test{
-            display: flex;
-           }
-           .grid-item {
-               padding: 20px;
-               border: 1px solid #ccc;
-               border-radius: 5px;
-               background-color: #fff;
-               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-           }
-           
-           /* Styles spécifiques aux éléments de grille */
-           .grid-item h2 {
-               font-size: 1.5rem;
-               color: #333;
-           }
-           
-           .project-members ul {
-               list-style-type: none;
-               padding: 0;
-           }
-           
-           .project-members li {
-               margin: 5px 0;
-               font-weight: bold;
-           }
-           
-           .project-progress-table {
-               width: 100%;
-               border-collapse: collapse;
-           }
-           
-           .project-progress-table th, .project-progress-table td {
-               padding: 10px;
-               text-align: left;
-               border-bottom: 1px solid #ccc;
-           }
-           </style>
-          
-          </div>
+         </div>
+        </div>
+       
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
           <footer class="footer">
@@ -496,11 +356,89 @@
     <!-- inject:js -->
     <script src="../../assets/js/off-canvas.js"></script>
     <script src="../../assets/js/hoverable-collapse.js"></script>
-    <script src="../../assets/js/misc.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script src="../../assets/js/chart.js"></script>
-    <script src="../../assets/js/todolist.js"></script>
+    <script>
+      
+      $(document).ready(function() {
+        $("#submitForm").on("click", function() {
+          // Get form data
+          var ProjectTitle = $("#ProjectTitle").val();
+          var ProjectDescription = $("#ProjectDescription").val();
+    
+          // Create a data object to send to the server
+          var formData = {
+            title: ProjectTitle,
+            description: ProjectDescription
+          };
+    
+          // Use Ajax to send data to the PHP backend
+          $.ajax({
+            type: "POST",
+            url: "AddProject.php", // Replace with the actual path to your PHP script
+            data: formData,
+            success: function(response) {
+              // Update a specific element with the response message
+              $("#responseMessage").html(response);
+            },
+            error: function(error) {
+              // Handle errors if the request fails
+              console.log(error);
+            }
+          });
+        });
+      });
+
+    </script>
+    <script>
+      // Attend que le document soit prêt
+      $(document).ready(function() {
+        // Gère le clic sur le bouton "+ Add a Project"
+        $('button.btn-gradient-primary').click(function() {
+          // Affiche la fenêtre modale pour ajouter un sujet
+          $('#addProjectModal').modal('show');
+        });
+
+        // Gère la soumission du formulaire
+        $('#addProjectForm').submit(function(event) {
+          // Empêche le comportement par défaut du formulaire (rechargement de la page)
+          event.preventDefault();
+
+          // Récupère les valeurs du formulaire
+          var ProjectTitle = $('#ProjectTitle').val();
+          var ProjectDescription = $('#ProjectDescription').val();
+
+          // Effectuez toute validation nécessaire ici
+
+          // Ajoute le nouveau sujet au tableau
+          addProjectToTable(ProjectTitle, ProjectDescription);
+
+          // Réinitialise le formulaire
+          $('#addProjectForm')[0].reset();
+
+          // Ferme la fenêtre modale
+          $('#addProjectModal').modal('hide');
+        });
+
+        // Fonction pour ajouter un nouveau sujet au tableau
+        function addProjectToTable(title, description) {
+          // Récupère le corps du tableau
+          var tableBody = $('.table tbody');
+
+          // Crée une nouvelle ligne de tableau
+          var newRow = tableBody.append('<tr></tr>').children('tr:last');
+
+          // Ajoute les cellules avec les détails du sujet
+          newRow.append('<td>' + title + '</td>');
+          newRow.append('<td>' + description + '</td>');
+          newRow.append('<td><label class="badge badge-gradient-success">New</label></td>');
+          newRow.append('<td>Now</td>');
+          newRow.append('<td>None yet</td>');
+
+          // Vous pouvez également effectuer des actions supplémentaires, telles que la mise à jour du serveur avec le nouveau sujet
+        }
+      });
+    </script>--!>
+    
     <!-- End custom js for this page -->
   </body>
+</html>
 </html>
