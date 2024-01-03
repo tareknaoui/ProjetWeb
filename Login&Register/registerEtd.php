@@ -47,7 +47,7 @@ if (mysqli_connect_error()) {
                 if ($stmt->execute()) {
                     session_start();
                     $_SESSION['Nom'] = $nom;
-                    header("Location: ../etudiant/dashboardEt.html");
+                    header("Location: login.html");
                     exit();
                 } else {
                     $error_message = "Erreur lors de l'insertion de l'utilisateur : " . $stmt->error;
