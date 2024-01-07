@@ -189,8 +189,28 @@
                 return;
             }
 
-            // Toutes les vérifications de validation ont réussi, rediriger vers la page du tableau de bord
-            // Example: window.location.href = '../etudiant/dashboardEt.html';
+                    
+        });
+    });
+    $(document).ready(function () {
+        $('#exampleInputEmail1').on('input', function () {
+            const email = $(this).val();
+            if (testEmail(email)) {
+                // Send AJAX request
+                $.ajax({
+                    url: 'check_email.php',
+                    type: 'post',
+                    data: {email: email},
+                    success: function(response) {
+                        if (response === 'taken') {
+                            $('#exampleInputEmail1').next('.error').remove();
+                            $('#exampleInputEmail1').after('<span class="error">Cette adresse e-mail est déjà utilisée.</span>');
+                        } else {
+                            $('#exampleInputEmail1').next('.error').remove();
+                        }
+                    }
+                });
+            }
         });
     });
 
