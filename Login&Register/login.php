@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$host = "localhost";
+$host = "localhost:3307";
 $user = 'root';
 $pass = '';
-$db = 'projetweb';
+$db = 'web';
 
 $link = mysqli_connect($host, $user, $pass, $db);
 

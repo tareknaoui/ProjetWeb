@@ -2,10 +2,10 @@
 ob_start();
 
 // Établir une connexion à la base de données (remplacez par vos informations d'accès à la base de données)
-$host = "localhost";
+$host = "localhost:3307";
 $user = "root";
 $password = "";
-$database = "projetweb";
+$database = "web";
 
 $link = new mysqli($host, $user, $password, $database);
 
