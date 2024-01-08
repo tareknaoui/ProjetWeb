@@ -275,9 +275,8 @@ if ($resultNotifications->num_rows > 0) {
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card table-striped">
                 <div class="card-body">
-                    <p>Sender: ' . $row['sender'] . '</p>
-                    <p>Message: ' . $row['message'] . '</p>
-                    <p>Created at: ' . $row['created_at'] . '</p>
+                    <p>Task successfully deleted</p>
+                    <p>Sent at: ' . $row['created_at'] . '</p>
                     
                     <!-- Form for the delete button -->
                     <form method="post" action="">
@@ -287,7 +286,6 @@ if ($resultNotifications->num_rows > 0) {
                     </form>
                     
                     <!-- Additional attributes from the notification table -->
-                    <p>Notification ID: ' . $row['id'] . '</p>
                 </div>
             </div>
         </div>
