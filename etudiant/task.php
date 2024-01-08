@@ -31,6 +31,21 @@ $stmtTasks->execute();
 $resultTasks = $stmtTasks->get_result();
 $stmtTasks->close();
 
+// Use the student's ID to fetch the project name from the projet table
+$stmtProject = $link->prepare("
+    SELECT p.TitreProjet 
+    FROM projet p 
+    JOIN equipesprojet e ON p.ID = e.ProjetID 
+    JOIN etudiants et ON et.IdEquipe = e.ID
+    WHERE et.AdresseEmail = ?
+");
+$stmtProject->bind_param("s", $email);
+$stmtProject->execute();
+$stmtProject->bind_result($projectName);
+$stmtProject->fetch();
+$stmtProject->close();
+
+
 
 
 
@@ -271,14 +286,16 @@ $stmtTasks->close();
         </nav>
         <!-- partial -->
         <div class="main-panel">
-          
+        <h1>Projet : <?php echo $projectName; ?></h1>
+
           <div class="content-wrapper">
-            
+
             <div class="page-header">
           
               
               
             </div>
+            
             
         <div class="card">
         <div class="card-body">
