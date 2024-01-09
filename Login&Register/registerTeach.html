@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-lg" id="exampleInputUniversity1"
-                                        placeholder="Université">
+                                        placeholder="Univ">
                                 </div>
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-lg" id="exampleInputFaculty1"
@@ -192,7 +192,7 @@
                                     });
 
 
-                                    $(document).ready(function () {
+  $(document).ready(function () {
   $('#registrationForm').on('submit', function (e) {
     e.preventDefault();
 
@@ -225,11 +225,37 @@
       
       return;
     }
+    $.ajax({
+                                                url: 'insert.php', // change this to your PHP file path
+                                                type: 'POST',
+                                                data: {
+                                                    nom: $('#exampleInputUsername1').val(),
+                                                    prenom: $('#exampleInputUsername2').val(),
+                                                    email: email,
+                                                    specialisation: $('#exampleInputSpecialty1').val(),
+                                                    password: password
+                                                },
+                                                success: function (data) {
+                                                    console.log(data);
+                                                    // You can do some actions here if data inserted successfully
+                                                    // Redirect to the dashboard page
+                                                    window.location.href = '../Encadreur/dashboard.html';
+                                                },
+                                                error: function (err) {
+                                                    console.log(err);
+                                                    // Handle error here
+                                                }
+                                            });
+                                        });
+                                    });
+    
+    
 
     // Toutes les vérifications de validation ont réussi, rediriger vers la page du tableau de bord
     window.location.href = '../Encadreur/dashboard.html';
   });
 });
+
 
                                 </script>
 </body>
