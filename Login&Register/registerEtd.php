@@ -1,5 +1,5 @@
 <?php
-$host = "localhost";
+$host = "localhost:3307";
 $user = 'root';
 $pass = '';
 $db = 'projetweb';
@@ -27,7 +27,6 @@ if (mysqli_connect_error()) {
             $specialite = $_POST['Specialite'];
 
             // Generate a random and unique Matricule
-            $matricule = generateUniqueMatricule($link);
 
             // Ajoutez ici des vérifications supplémentaires selon vos besoins, par exemple, vérification d'email, de mot de passe, etc.
 
@@ -41,8 +40,8 @@ if (mysqli_connect_error()) {
                 echo "L'adresse e-mail est déjà utilisée.";
             } else {
                 // Insertion dans la base de données
-                $stmt = $link->prepare("INSERT INTO etudiants (`Nom`, `Prenom`, `AdresseEmail`, `DateNaissance`, `MotDePasse`, `Universite`, `Faculte`, `Specialite`, `Matricule`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssssssss", $nom, $prenom, $email, $date_naissance, $password, $universite, $faculte, $specialite, $matricule);
+                $stmt = $link->prepare("INSERT INTO etudiants (`Nom`, `Prenom`, `AdresseEmail`, `DateNaissance`, `MotDePasse`, `Universite`, `Faculte`, `Specialite`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssssssss", $nom, $prenom, $email, $date_naissance, $password, $universite, $faculte, $specialite);
 
                 if ($stmt->execute()) {
                     session_start();
@@ -67,38 +66,5 @@ if (mysqli_connect_error()) {
     mysqli_close($link);
 }
 
-function generateUniqueMatricule($link)
-{
-    $matricule = generateRandomMatricule();
 
-    // Vérifier si le matricule est déjà utilisé
-    $stmt = $link->prepare("SELECT * FROM etudiants WHERE Matricule = ?");
-    $stmt->bind_param("s", $matricule);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    while ($result->num_rows > 0) {
-        // Regénérer un nouveau matricule jusqu'à ce qu'il soit unique
-        $matricule = generateRandomMatricule();
-        $stmt->bind_param("s", $matricule);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    }
-
-    return $matricule;
-}
-
-function generateRandomMatricule()
-{
-    // Générer un matricule aléatoire, vous pouvez personnaliser la logique selon vos besoins
-    $characters = '0123456789';
-    $length = 8;
-    $matricule = '';
-
-    for ($i = 0; $i < $length; $i++) {
-        $matricule .= $characters[rand(0, strlen($characters) - 1)];
-    }
-
-    return $matricule;
-}
 ?>

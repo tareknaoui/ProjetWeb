@@ -1,41 +1,21 @@
 <?php
-// ... (your existing code)
-
-// Establish a database connection (replace with your database credentials)
-$host = "localhost:3307";
-$user = "root";
+$servername = "localhost:3307";
+$username = "root";
 $password = "";
-$database = "projetweb";
+$dbname = "web";
 
-$link = new mysqli($host, $user, $password, $database);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-// Vérifier la connexion
-if ($link->connect_error) {
-    die("Connection failed: " . $link->connect_error);
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
 }
 
-// Récupérer le prénom et le nom de l'utilisateur connecté
-session_start();
-$email = $_SESSION['email'];
-
-$stmt = $link->prepare("SELECT Prenom, Nom FROM etudiants WHERE AdresseEmail = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$stmt->bind_result($prenom, $nom);
-$stmt->fetch();
-$stmt->close();
-
-// Récupérer les données de la table 'sujet', y compris les fichiers PDF de l'encadreur et de l'étudiant
-$stmtProjects = $link->prepare("SELECT ID, TitreProjet, DescriptionProjet, EtatProjet, DateCreation FROM projet");
-$stmtProjects->execute();
-$resultProjects = $stmtProjects->get_result();
-$stmtProjects->close();
-
-// Fetch the result and assign it to $result variable
-$result = $resultProjects;
-
-
+$sql = "SELECT Nom, Prenom, Specialite FROM etudiants";
+$result = $conn->query($sql);
 ?>
+
 
 
 <!DOCTYPE html>
@@ -46,57 +26,56 @@ $result = $resultProjects;
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Purple Admin</title>
     <!-- plugins:css -->
-    <link rel="stylesheet" href="../Encadreur/assets/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="../Encadreur/assets/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
-    <link rel="stylesheet" href="dashboardET.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="../Encadreur/assets/images/favicon.ico" />
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   </head>
   <body>
-    
-      <!-- partial:partials/_navbar.html -->
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
       <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <a  class="as"><H1>Logo</H1></a>
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+          <a class="navbar-brand brand-logo" href="../../dashboardEn.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
+          <a class="navbar-brand brand-logo-mini" href="../../dashboardEn.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
-        <style>
-          .as {
-            text-decoration: none; /* Remove underline from link */
-          }
-          .as h1 {
-  color: #0d1316; /* Change the text color */
-  font-family: 'Arial', sans-serif; /* Change the font */
-  font-size: 2.5em; /* Increase the font size */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a text shadow */
-}
-        </style>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
           <div class="search-field d-none d-md-block">
-            
+            <form class="d-flex align-items-center h-100" action="#">
+              <div class="input-group">
+                <div class="input-group-prepend bg-transparent">
+                  <i class="input-group-text border-0 mdi mdi-magnify"></i>
+                </div>
+                <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
+              </div>
+            </form>
           </div>
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="nav-profile-img">
-                  <img src="../Encadreur/assets/images/faces/face1.jpg" alt="image">
+                  <img src="../../assets/images/faces/face1.jpg" alt="image">
                   <span class="availability-status online"></span>
                 </div>
                 <div class="nav-profile-text">
-                <span class="font-weight-bold mb-2"><?php echo $prenom . ' ' . $nom; ?></span>
+                  <p class="mb-1 text-black">David Greymaax</p>
                 </div>
               </a>
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                 <a class="dropdown-item" href=""> 
+                <a class="dropdown-item" href="#">
                   <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="../Impact/index.html">
+                <a class="dropdown-item" href="#">
                   <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
               </div>
             </li>
@@ -115,7 +94,7 @@ $result = $resultProjects;
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item preview-item">
                   <div class="preview-thumbnail">
-                    <img src="../Encadreur/assets/images/faces/face4.jpg" alt="image" class="profile-pic">
+                    <img src="../../assets/images/faces/face4.jpg" alt="image" class="profile-pic">
                   </div>
                   <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                     <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
@@ -125,7 +104,7 @@ $result = $resultProjects;
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item preview-item">
                   <div class="preview-thumbnail">
-                    <img src="../Encadreur/assets/images/faces/face2.jpg" alt="image" class="profile-pic">
+                    <img src="../../assets/images/faces/face2.jpg" alt="image" class="profile-pic">
                   </div>
                   <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                     <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
@@ -135,7 +114,7 @@ $result = $resultProjects;
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item preview-item">
                   <div class="preview-thumbnail">
-                    <img src="../Encadreur/assets/images/faces/face3.jpg" alt="image" class="profile-pic">
+                    <img src="../../assets/images/faces/face3.jpg" alt="image" class="profile-pic">
                   </div>
                   <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                     <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
@@ -211,145 +190,144 @@ $result = $resultProjects;
       </nav>
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_sidebar.html -->
+        <!-- partial:../../partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
             <li class="nav-item nav-profile">
               <a href="#" class="nav-link">
                 <div class="nav-profile-image">
-                  <img src="../Encadreur/assets/images/faces/face1.jpg" alt="profile">
+                  <img src="../../assets/images/faces/face1.jpg" alt="profile">
                   <span class="login-status online"></span>
                   <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                <span class="font-weight-bold mb-2"><?php echo $prenom . ' ' . $nom; ?></span>
-                  <span class="text-secondary text-small">Etudiant</span>
+                  <span class="font-weight-bold mb-2">David Grey. H</span>
+                  <span class="text-secondary text-small">Project Manager</span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="dashboardEt.php">
+              <a class="nav-link" href="../../dashboard.html">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-           
-          
+            
             <li class="nav-item">
-              <a class="nav-link" href="page-topic-exploration.php">
-                <span class="menu-title"> Page Topic Exploration</span>
+              <a class="nav-link" href="../forms/AllProject.html">
+                <span class="menu-title">Project Viewing Page</span>
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
               </a>
             </li>
-       
             <li class="nav-item">
-              <a class="nav-link" href="inbox.php">
-                <span class="menu-title">Inbox</span>
-                <i class="mdi mdi-email-outline menu-icon"></i>
+              <a class="nav-link" href="../../pages/charts/chartjs.html">
+                <span class="menu-title">Topic Proposal Page</span>
+                <i class="mdi mdi-chart-bar menu-icon"></i>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="task.php">
-                <span class="menu-title">Project Progress</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              <a class="nav-link" href="../../pages/tables/basic-table.php">
+                <span class="menu-title">Candidate Viewing</span>
+                <i class="mdi mdi-table-large menu-icon"></i>
               </a>
             </li>
             
-          
+            <li class="nav-item sidebar-actions">
+              <span class="nav-link">
+                <div class="border-bottom">
+                  <h6 class="font-weight-normal mb-3">Projects</h6>
+                </div>
+                <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a project</button>
+             
+              </span>
+            </li>
           </ul>
         </nav>
         <!-- partial -->
-        
         <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
           
-            <div class="content-wrapper">
-              
-              <div class="page-header">
-            
-                
-                
+          
+            </div>
+            <div class="row">
+             
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card table-striped">
+                  <div class="card-body">
+                    <h4 class="card-title">Students:</h4>
+               
+                    </p>
+                    <table class="table table-striped wide-table">
+                      <thead>
+                        <tr>
+                          <th> User </th>
+                          <th> First name </th>
+                          <th> Major </th>
+                          <th> Project </th>
+                          <th> File </th>
+                          <Th>Accept</Th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        if ($result->num_rows > 0) {
+                          // output data of each row
+                          while($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td class='py-1'><img src='../../assets/images/faces-clipart/pic-1.png' alt='image' /></td>";
+                            echo "<td>" . $row["Nom"] . "</td>";
+                            echo "<td>" . $row["Prenom"] . "</td>";
+                            echo "<td>" . $row["Specialite"] . "</td>";
+                            echo "<td><a href='path_to_your_pdf_file.pdf' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
+                            echo "<td><button type='button' class='btn btn-success'>Accept </button><button type='button' class='btn btn-danger'>Decline</button></td>";
+                            echo "</tr>";
+                          }} else {
+                            echo "0 results";
+                          }
+                          $conn->close();
+
+                        ?>
+                   
+                       
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
               
-              <div class="col-lg-12 grid-margin stretch-card">
-           
-                
+               
               
-                    </p>
-                    <?php
-                    if ($result->num_rows > 0) {
-                      echo'    <div class="card table-striped">';
-                      echo'  <div class="card-body">';
-                      echo'  <h4 class="card-title">Students:</h4>';
-                      echo '<table class="table table-striped wide-table">';
-                      echo '<thead>
-                          <tr>
-                            <th>Encadreur First Name</th>
-                            <th>Project</th>
-                            <th>Project detail</th>
-                            <th>Submit</th>
-                          </tr>
-                          </thead>
-                          <tbody>';
-
-                      // Loop through the database results and generate table rows
-                      while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['TitreProjet'] . "</td>";
-                        echo "<td>" . $row['DescriptionProjet'] . "</td>";
-                        echo "<td><a href='" . $row['EtatProjet'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
-                        echo "<td><a href='" . $row['DateCreation'] . "' target='_blank' class='btn btn-primary'>Send PDF</a></td>";
-                        echo "</tr>";
-                    }
-                    echo '</tbody></table>';
-                } else {
-                    echo '<div class="no-results">No results found.</div>';
-                }
-                    ?>
-                  </div>
-                  
-                </div>
-                
+             
             </div>
-            
-            <!-- content-wrapper ends -->
-            <!-- partial:partials/_footer.html -->
-          
-            <!-- partial -->
           </div>
-          <!-- main-panel ends -->
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <footer class="footer">
+            <div class="container-fluid d-flex justify-content-between">
+              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
+              <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+            </div>
+          </footer>
+          <!-- partial -->
         </div>
-        <!-- page-body-wrapper ends -->
+        <!-- main-panel ends -->
       </div>
+      <!-- page-body-wrapper ends -->
+    </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="../Encadreur/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
-    <script src="../Encadreur/assets/vendors/chart.js/Chart.min.js"></script>
-    <script src="../Encadreur/assets/js/jquery.cookie.js" type="text/javascript"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
-    <script src="../Encadreur/assets/js/off-canvas.js"></script>
-    <script src="../Encadreur/assets/js/hoverable-collapse.js"></script>
-    <script src="../Encadreur/assets/js/misc.js"></script>
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/hoverable-collapse.js"></script>
+    <script src="../../assets/js/misc.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
-    <script src="../Encadreur/assets/js/dashboard.js"></script>
-    <script src="../Encadreur/assets/js/todolist.js"></script>
     <!-- End custom js for this page -->
   </body>
-  <style>
-  .no-results {
-    font-size: 2em; /* Make the text larger */
-    color: white; /* Change the text color */
-    text-align: center; /* Center the text */
-    margin-top: 50px; /* Add some space at the top */
-    width: 100%; /* Full width */
-    display: flex; /* Use flexbox */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    height: 100vh; /* Full viewport height */
-  }
-  </style>
 </html>

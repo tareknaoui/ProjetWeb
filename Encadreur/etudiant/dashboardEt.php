@@ -3,7 +3,7 @@
   $host = "localhost:3307";
   $user = "root";
   $password = "";
-  $database = "projetweb";
+  $database = "web";
 
   $link = new mysqli($host, $user, $password, $database);
 
@@ -22,10 +22,6 @@
   $stmt->bind_result($prenom, $nom);
   $stmt->fetch();
   $stmt->close();
-  $stmtProjects = $link->prepare("SELECT ID, TitreProjet, DescriptionProjet, EtatProjet, DateCreation FROM projet");
-  $stmtProjects->execute();
-  $resultProjects = $stmtProjects->get_result();
-  $stmtProjects->close();
 
   // Fetch student id
   $stmtStudentId = $link->prepare("SELECT ID FROM etudiants WHERE AdresseEmail = ?");
@@ -60,7 +56,10 @@ $resultTeamMembers = $stmtTeamMembers->get_result();
 $stmtTeamMembers->close();
 
   // Retrieve data from the 'sujet' table, including encadreur's first name
-
+  $sql = "SELECT e.Prenom AS EncadreurFirstName, s.description, s.theme, s.encadreur_fichier_pdf 
+      FROM sujet s
+      INNER JOIN encadreurs e ON s.encadreur_id = e.ID";
+  $result = $link->query($sql);
 
   // Fetch notifications
   $stmtNotifications = $link->prepare("SELECT id, message, created_at FROM notification WHERE etudiant_id = ?");
@@ -75,9 +74,6 @@ $stmtTeamMembers->close();
   $stmtTasks->execute();
   $resultTasks = $stmtTasks->get_result();
   $stmtTasks->close();
-
-
-  
   ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -144,8 +140,9 @@ $stmtTeamMembers->close();
                  <a class="dropdown-item" href=""> 
                   <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="../Impact/index.html">
-                  <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+                <a class="dropdown-item" href="../Login&Register/logout.php">
+    <i class="mdi mdi-logout me-2 text-primary"></i> Signout 
+</a>
               </div>
             </li>
             <li class="nav-item d-none d-lg-block full-screen-link">
@@ -345,21 +342,21 @@ $stmtTeamMembers->close();
                         </tr>
                       </thead>
                       <tbody>
-                      <?php
-                if ($resultProjects->num_rows > 0) {
-                    // Loop through the database results and generate table rows
-                    while ($project = $resultProjects->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $project['TitreProjet'] . "</td>";
-                        echo "<td>" . $project['DescriptionProjet'] . "</td>";
-                        echo "<td>" . $project['EtatProjet'] . "</td>";
-                        echo "<td>" . $project['DateCreation'] . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo '<tr><td colspan="4">No projects found.</td></tr>';
-                }
-                ?>
+                        <?php
+                        if ($result->num_rows > 0) {
+                          // Loop through the database results and generate table rows
+                          while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['EncadreurFirstName'] . "</td>";
+                            echo "<td>" . $row['description'] . "</td>";
+                            echo "<td>" . $row['theme'] . "</td>";
+                            echo "<td><a href='" . $row['encadreur_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
+                            echo "</tr>";
+                          }
+                        } else {
+                          echo '<tr><td colspan="4">No topics found.</td></tr>';
+                        }
+                        ?>
                       </tbody>
                     </table>
                   </div>
@@ -452,20 +449,14 @@ $stmtTeamMembers->close();
                     </thead>
                     <tbody>
                       <?php
-               if ($resultTeamMembers->num_rows > 0) {
-                while ($etudiant = $resultTeamMembers->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $etudiant['Nom'] . " " . $etudiant['Prenom'] . "</td>";
-                    echo "<td> </td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr>";
-                echo "<td>Vous n'êtes pas dans un projet</td>";
-                echo "<td> </td>";
-                echo "</tr>";
-            }
-            ?>  
+                      while ($etudiant = $resultTeamMembers->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $etudiant['Nom'] . " " . $etudiant['Prenom'] . "</td>";
+                        echo "<td> </td>";
+                     
+                        echo "</tr>";
+                      }
+                      ?>
                     </tbody>
                   </table>
                 </div>

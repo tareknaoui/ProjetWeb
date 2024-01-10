@@ -5,7 +5,7 @@
 $host = "localhost:3307";
 $user = "root";
 $password = "";
-$database = "web";
+$database = "projetweb";
 
 $link = new mysqli($host, $user, $password, $database);
 
@@ -32,24 +32,43 @@ $resultTasks = $stmtTasks->get_result();
 $stmtTasks->close();
 
 // Use the student's ID to fetch the project name from the projet table
-$stmtProject = $link->prepare("
-    SELECT p.TitreProjet 
-    FROM projet p 
-    JOIN equipesprojet e ON p.ID = e.ProjetID 
-    JOIN etudiants et ON et.IdEquipe = e.ID
-    WHERE et.AdresseEmail = ?
-");
-$stmtProject->bind_param("s", $email);
-$stmtProject->execute();
-$stmtProject->bind_result($projectName);
-$stmtProject->fetch();
-$stmtProject->close();
+$stmtTeam = $link->prepare("SELECT IdEquipe FROM etudiants WHERE AdresseEmail = ?");
+$stmtTeam->bind_param("s", $email);
+$stmtTeam->execute();
+$stmtTeam->bind_result($teamId);
+$stmtTeam->fetch();
+$stmtTeam->close();
+
+// Vérifier si l'ID d'équipe est nul
+$projectName = ''; // Déclaration de la variable $projectName
+
+// Vérifier si l'ID d'équipe est nul
+if ($teamId === null) {
+  echo "Vous n'êtes pas dans un projet.";
+  // Vérifier si l'ID d'équipe est nul
+$projectName = "Vous n'etes pas dans un projet";
+  // Vous pouvez choisir de sortir du script ou de rediriger l'utilisateur ici
+} else {
+  // Utiliser l'ID de l'étudiant pour récupérer le nom du projet depuis la table projet
+  $stmtProject = $link->prepare("
+      SELECT p.TitreProjet 
+      FROM projet p 
+      JOIN equipesprojet e ON p.ID = e.ProjetID 
+      JOIN etudiants et ON et.IdEquipe = e.ID
+      WHERE et.AdresseEmail = ?
+  ");
+  $stmtProject->bind_param("s", $email);
+  $stmtProject->execute();
+  $stmtProject->bind_result($projectName);
+  $stmtProject->fetch();
+  $stmtProject->close();
+}
+  ?>
 
 
 
 
 
-?>
 <html>
     <!DOCTYPE html>
 <html lang="en">
@@ -312,26 +331,26 @@ $stmtProject->close();
                     </thead>
                     <tbody>
                     <?php
-    if ($resultTasks->num_rows > 0) {
-        // Loop through the database results and generate table rows
-        while ($row = $resultTasks->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $row['ID'] . "</td>";
-            echo "<td>" . $row['DescriptionTache'] . "</td>";
-            echo "<td>" . $row['Echeance'] . "</td>";
-            echo "<td>" . $row['EtatTache'] . "</td>";
-            echo "<td>";
-            echo "<form method='post' action=''>"; // Use an empty action for the same page
-            echo "<input type='hidden' name='taskId' value='" . $row['ID'] . "'>";
-            echo "<input type='hidden' name='newEtat' value='" . ($row['EtatTache'] === 'To do' ? 'In progress' : 'To do') . "'>";
-            echo "<input type='submit' value='Update' class='btn btn-primary'>";
-            echo "</form>";
-            echo "</td>";
-            echo "</tr>";
-        }
-    } else {
-        echo '<tr><td colspan="5">No tasks found.</td></tr>';
-    }
+
+if ($resultTasks->num_rows > 0) {
+  while ($row = $resultTasks->fetch_assoc()) {
+      echo "<tr>";
+      echo "<td>" . $row['ID'] . "</td>";
+      echo "<td>" . $row['DescriptionTache'] . "</td>";
+      echo "<td>" . $row['Echeance'] . "</td>";
+      echo "<td>" . $row['EtatTache'] . "</td>";
+      echo "<td>";
+      echo "<form method='post' action=''>"; // Use an empty action for the same page
+      echo "<input type='hidden' name='taskId' value='" . $row['ID'] . "'>";
+      echo "<input type='hidden' name='newEtat' value='" . ($row['EtatTache'] === 'To do' ? 'In progress' : 'To do') . "'>";
+      echo "<input type='submit' value='Update' class='btn btn-primary'>";
+      echo "</form>";
+      echo "</td>";
+      echo "</tr>";
+  }
+} else {
+  echo '<tr><td colspan="5">No tasks found.</td></tr>';
+}
     ?>
 </tbody>
                 </table>

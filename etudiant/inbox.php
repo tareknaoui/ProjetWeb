@@ -5,7 +5,7 @@ ob_start();
 $host = "localhost:3307";
 $user = "root";
 $password = "";
-$database = "web";
+$database = "projetweb";
 
 $link = new mysqli($host, $user, $password, $database);
 

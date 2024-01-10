@@ -5,7 +5,7 @@
 $host = "localhost:3307";
 $user = "root";
 $password = "";
-$database = "projetweb";
+$database = "web";
 
 $link = new mysqli($host, $user, $password, $database);
 
@@ -26,15 +26,10 @@ $stmt->fetch();
 $stmt->close();
 
 // Récupérer les données de la table 'sujet', y compris les fichiers PDF de l'encadreur et de l'étudiant
-$stmtProjects = $link->prepare("SELECT ID, TitreProjet, DescriptionProjet, EtatProjet, DateCreation FROM projet");
-$stmtProjects->execute();
-$resultProjects = $stmtProjects->get_result();
-$stmtProjects->close();
-
-// Fetch the result and assign it to $result variable
-$result = $resultProjects;
-
-
+$sql = "SELECT e.Prenom AS EncadreurFirstName, s.description, s.theme, s.encadreur_fichier_pdf, s.etudiant_fichier_pdf 
+        FROM sujet s
+        INNER JOIN encadreurs e ON s.encadreur_id = e.ID";
+$result = $link->query($sql);
 ?>
 
 
@@ -295,16 +290,17 @@ $result = $resultProjects;
                       // Loop through the database results and generate table rows
                       while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $row['TitreProjet'] . "</td>";
-                        echo "<td>" . $row['DescriptionProjet'] . "</td>";
-                        echo "<td><a href='" . $row['EtatProjet'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
-                        echo "<td><a href='" . $row['DateCreation'] . "' target='_blank' class='btn btn-primary'>Send PDF</a></td>";
+                        echo "<td>" . $row['EncadreurFirstName'] . "</td>";
+                        echo "<td>" . $row['description'] . "</td>";
+                        echo "<td><a href='" . $row['encadreur_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Open PDF</a></td>";
+                        echo "<td><a href='" . $row['etudiant_fichier_pdf'] . "' target='_blank' class='btn btn-primary'>Send PDF</a></td>";
                         echo "</tr>";
+                      }
+
+                      echo '</tbody></table>';
+                    } else {
+                      echo '<div class="no-results">No results found.</div>';
                     }
-                    echo '</tbody></table>';
-                } else {
-                    echo '<div class="no-results">No results found.</div>';
-                }
                     ?>
                   </div>
                   

@@ -1,3 +1,36 @@
+<?php
+$host = "localhost:3307";
+$user = "root";
+$password = "";
+$database = "projetweb";
+
+$link = new mysqli($host, $user, $password, $database);
+
+// Check the connection
+if ($link->connect_error) {
+    die("Connection failed: " . $link->connect_error);
+}
+
+// Récupérer le prénom et le nom de l'utilisateur connecté
+session_start();
+$email = $_SESSION['email'];
+
+$stmt = $link->prepare("SELECT ID, Prenom, Nom FROM encadreurs WHERE AdresseEmail = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$stmt->bind_result($id, $prenom, $nom);
+$stmt->fetch();
+$stmt->close();
+
+// Get the projects associated with this supervisor
+$stmt = $link->prepare("SELECT ID, TitreProjet FROM projet WHERE EncadreurID = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$resultProjects = $stmt->get_result();
+$stmt->close();
+?>  
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -198,7 +231,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../dashboard.html">
+            <a class="nav-link" href="../../dashboard.php">
               <span class="menu-title">Dashboard</span>
               <i class="mdi mdi-home menu-icon"></i>
             </a>
@@ -217,7 +250,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../pages/tables/basic-table.html">
+            <a class="nav-link" href="../../pages/tables/basic-table.php">
               <span class="menu-title">Application Viewing</span>
               <i class="mdi mdi-table-large menu-icon"></i>
             </a>
@@ -236,444 +269,41 @@
       </nav>
       <!-- partial -->
       <!-- partial -->
+  
+
+
       <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="page-header">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <div class="grid-item">
+                            <form method='post' action=''>
+                                <label for='studentEmail'>Student Email:</label>
+                                <input type='email' name='studentEmail' required><br>
 
-            <!-- Table displaying all projects -->
-            <div class="row">
-              <div class="col-12 grid-margin">
-                <div class="card">
-                  <div class="card-body">
+                                <label for='taskDescription'>Task Description:</label>
+                                <input type='text' name='taskDescription' required><br>
 
+                                <label for='echeance'>Task Deadline:</label>
+                                <input type='date' name='echeance' required><br>
 
-                    <div class="container">
-                    <?php
-$projectId = $_GET['id'];
-echo "$projectId";
+                                <label for='projetID'>Select Project:</label>
+                                <select name='projetID'>
+                                    <?php while ($row = $resultProjects->fetch_assoc()) : ?>
+                                        <option value='<?php echo $row['ID']; ?>'><?php echo $row['TitreProjet']; ?></option>
+                                    <?php endwhile; ?>
+                                </select><br>
 
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'web';
-$port = 3307;
-
-$conn = new mysqli($servername, $username, $password, $database, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$studentsQuery = "SELECT et.Nom, et.Prenom, p.TitreProjet 
-                  FROM etudiants et 
-                  JOIN equipesprojet eq ON et.IdEquipe = eq.ID 
-                  JOIN projet p ON eq.ProjetID = p.ID
-                  WHERE p.ID = ?";
-$stmt = $conn->prepare($studentsQuery);
-$stmt->bind_param("i", $projectId);
-$stmt->execute();
-$studentsResult = $stmt->get_result();
-?>
-
-<div class="grid-item">
-                        <div class="project-members-table-container">
-                          <table class="project-members-table" id="membersTable">
-                            <thead>
-                              <tr>
-                                <th>Nom du Membre</th>
-                                <th>Rôle</th>
-                                <th>Titre du Projet</th>
-
-                              </tr>
-                            </thead>
-                            <tbody>
-                <?php
-                // Dynamically add students
-                while ($row = $studentsResult->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $row['Nom'] . "</td>";
-                    echo "<td>" . $row['Prenom'] . "</td>";
-                    echo "<td>" . $row['TitreProjet'] . "</td>";
-                    echo "</tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<?php
-$conn->close();
-?>
-                        
-                        
-  <div class="grid-item">
-    <h2>Membres du Projet</h2>
-    <div class="project-members">
-      <div class="add-member-form">
-        <h2>Ajouter un nouveau membre</h2>
-        <form id="addMemberForm">
-          <label for="memberName">Nom du membre:</label>
-          <input type="text" id="memberName" name="memberName" required>
-  
-          <label for="memberRole">Rôle:</label>
-          <input type="text" id="memberRole" name="memberRole" required>
-  
-          <button type="button" onclick="addMember()">Ajouter le membre</button>
-        </form>
-      </div>
-      <!-- Ajoutez une div pour afficher la table des membres -->
-     
-    </div>
-  </div>
-  
-  
-
-<!-- ... Votre contenu HTML existant ... -->
-
-
-<?php
-$projectId = $_GET['id'];
-
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'web';
-$port = 3307;
-
-$conn = new mysqli($servername, $username, $password, $database, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$studentsQuery = "SELECT et.Nom, et.Prenom 
-                  FROM etudiants et 
-                  JOIN equipesprojet eq ON et.IdEquipe = eq.ID 
-                  JOIN projet p ON eq.ProjetID = p.ID
-                  WHERE p.ID = ?";
-$stmt = $conn->prepare($studentsQuery);
-$stmt->bind_param("i", $projectId);
-$stmt->execute();
-$studentsResult = $stmt->get_result();
-?>
-
-<div class="grid-item">
-    <div class="add-task-form">
-        <h2>Ajouter une nouvelle tâche</h2>
-        <form id="addTaskForm" method="POST">
-            <label for="taskNumber">Nom de tâche:</label>
-            <input type="text" id="taskNumber" name="taskNumber" required>
-
-            <label for="taskStatus">Etat:</label>
-            <input type="text" id="taskStatus" name="taskStatus" required>
-
-            <label for="assignedTo">Assigné à:</label>
-            <input type="text" id="assignedTo" name="assignedTo" required>
-
-           <!-- <select id="assignedTo" name="assignedTo" required>
-    <option value="" selected>Veuillez sélectionner un étudiant</option>
-    <?php
-   
-         
-
-    while ($row = $studentsResult->fetch_assoc()) {
-      
-        echo "<option value='" . $row['ID'] . "'>" . $row['Nom'] . " " . $row['Prenom'] . "</option>";
-        $nom =$row['ID'];
-        echo "$nom";
-
-    }
-    ?>
-</select> -->
-
-            <label for="taskPriority">Priorité:</label>
-            <select id="taskPriority" name="taskPriority" required>
-                <option value="High">Haute</option>
-                <option value="Medium">Moyenne</option>
-                <option value="Low">Basse</option>
-            </select>
-
-            <button type="submit">Ajouter la tâche</button>
-        </form>
-        </div>
-        <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $taskNumber = $_POST['taskNumber'];
-    $taskStatus = $_POST['taskStatus'];
-    $assignedToName = $_POST['assignedTo'];
-    $taskPriority = $_POST['taskPriority'];
-    echo"$assignedToName";
-
-    // Récupérez l'ID de l'étudiant à partir du nom
-    $studentSql = "SELECT ID FROM etudiants WHERE CONCAT(Nom, ' ', Prenom) = ?";
-    $studentStmt = $conn->prepare($studentSql);
-    $studentStmt->bind_param("s", $assignedToName);
-    $studentStmt->execute();
-    $studentResult = $studentStmt->get_result();
-    $studentRow = $studentResult->fetch_assoc();
-
-    if ($studentRow) {
-        $assignedToId = $studentRow['ID'];
-
-        $sql = "INSERT INTO tachesprojet (DescriptionTache, ProjetID, EtatTache, ResponsableTacheID, AutresInformations) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        if ($conn->error) {
-            echo "Erreur lors de la préparation de la requête : " . $conn->error;
-        }
-        $stmt->bind_param("ssiss", $taskNumber, $projectId, $taskStatus, $assignedToId, $taskPriority);
-        $stmt->execute();
-        if ($stmt->error) {
-            echo "Erreur lors de l'insertion : " . $stmt->error;
-        } else {
-            echo "Tâche ajoutée avec succès";
-        }
-    } else {
-        echo "Aucun étudiant trouvé avec le nom " . $assignedToName;
-        echo"$assignedToName";
-
-    }
-}
-?>
-</div>
-<?php
-$projectId = $_GET['id'];
-
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'web';
-$port = 3307;
-
-$conn = new mysqli($servername, $username, $password, $database, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$tasksQuery = "SELECT t.ID, t.DescriptionTache, t.EtatTache, et.Nom, et.Prenom 
-               FROM tachesprojet t 
-               JOIN etudiants et ON t.ResponsableTacheID = et.ID 
-               WHERE t.ProjetID = ?";
-$stmt = $conn->prepare($tasksQuery);
-$stmt->bind_param("i", $projectId);
-$stmt->execute();
-$tasksResult = $stmt->get_result();
-?>
-
-<div class="grid-item">
-    <h2>Progression du Projet</h2>
-    <table class="project-progress-table">
-        <thead>
-            <tr>
-                <th>ID de tâche</th>
-                <th>Description de tâche</th>
-                <th>État de tâche</th>
-                <th>Assigné à</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            while ($row = $tasksResult->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>" . $row['ID'] . "</td>";
-                echo "<td>" . $row['DescriptionTache'] . "</td>";
-                echo "<td>" . $row['EtatTache'] . "</td>";
-                echo "<td>" . $row['Nom'] . " " . $row['Prenom'] . "</td>";
-                echo "</tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-</div>
-
-
-
-              </div>
-              <style>
-                /* Style pour la table des membres du projet */
-                .project-members-table-container {
-                  max-width: 600px;
-                  margin: 20px auto;
-                }
-              
-                .project-members-table {
-                  width: 100%;
-                  border-collapse: collapse;
-                  margin-top: 15px;
-                }
-              
-                .project-members-table th,
-                .project-members-table td {
-                  padding: 12px;
-                  text-align: left;
-                  border-bottom: 1px solid #ddd;
-                }
-              
-                .project-members-table th {
-                  background-color: #f2f2f2;
-                }
-              
-                .project-members-table tbody tr:hover {
-                  background-color: #f5f5f5;
-                }
-              
-                /* Style pour le formulaire d'ajout de membre */
-                .add-member-form {
-                  max-width: 400px;
-                  margin: 20px auto;
-                  padding: 20px;
-                  background-color: #f8f9fa;
-                  border: 1px solid #dcdfe6;
-                  border-radius: 5px;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                }
-              
-                .add-member-form h2 {
-                  font-size: 1.5rem;
-                  color: #333;
-                  margin-bottom: 20px;
-                }
-              
-                .add-member-form label {
-                  display: block;
-                  margin-bottom: 8px;
-                  font-weight: bold;
-                }
-              
-                .add-member-form input {
-                  width: 100%;
-                  padding: 10px;
-                  margin-bottom: 15px;
-                  box-sizing: border-box;
-                  border: 1px solid #ced4da;
-                  border-radius: 4px;
-                  background-color: #fff;
-                  color: #495057;
-                }
-              
-                .add-member-form button {
-                  background-color: #007bff;
-                  color: #fff;
-                  padding: 10px 15px;
-                  border: none;
-                  border-radius: 4px;
-                  cursor: pointer;
-                }
-              
-                .add-member-form button:hover {
-                  background-color: #0056b3;
-                }
-              </style>
-              
-
-              <style>
-                .add-task-form {
-                  max-width: 400px;
-                  margin: 20px auto;
-                  padding: 20px;
-                  background-color: #f8f9fa;
-                  border: 1px solid #dcdfe6;
-                  border-radius: 5px;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                }
-
-                .add-task-form h2 {
-                  font-size: 1.5rem;
-                  color: #333;
-                  margin-bottom: 20px;
-                }
-
-                .add-task-form label {
-                  display: block;
-                  margin-bottom: 8px;
-                  font-weight: bold;
-                }
-
-                .add-task-form input,
-                .add-task-form select {
-                  width: 100%;
-                  padding: 10px;
-                  margin-bottom: 15px;
-                  box-sizing: border-box;
-                  border: 1px solid #ced4da;
-                  border-radius: 4px;
-                  background-color: #fff;
-                  color: #495057;
-                }
-
-                .add-task-form button {
-                  background-color: #007bff;
-                  color: #fff;
-                  padding: 10px 15px;
-                  border: none;
-                  border-radius: 4px;
-                  cursor: pointer;
-                }
-
-                .add-task-form button:hover {
-                  background-color: #0056b3;
-                }
-              </style>
-
-
-              <style>
-                /* Styles pour la grille */
-                .project-grid {
-                  display: grid;
-                  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                  gap: 20px;
-                }
-
-                .test {
-                  display: flex;
-                }
-
-                .grid-item {
-                  padding: 20px;
-                  border: 1px solid #ccc;
-                  border-radius: 5px;
-                  background-color: #fff;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                }
-
-                /* Styles spécifiques aux éléments de grille */
-                .grid-item h2 {
-                  font-size: 1.5rem;
-                  color: #333;
-                }
-
-                .project-members ul {
-                  list-style-type: none;
-                  padding: 0;
-                }
-
-                .project-members li {
-                  margin: 5px 0;
-                  font-weight: bold;
-                }
-
-                .project-progress-table {
-                  width: 100%;
-                  border-collapse: collapse;
-                }
-
-                .project-progress-table th,
-                .project-progress-table td {
-                  padding: 10px;
-                  text-align: left;
-                  border-bottom: 1px solid #ccc;
-                }
-              </style>
-
+                                <input type='submit' value='Assign Task'>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- content-wrapper ends -->
-            <!-- partial:../../partials/_footer.html -->
 
-            <!-- partial -->
-          </div>
-          <!-- main-panel ends -->
-        </div>
+<!-- page-body-wrapper ends -->
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
         <!-- page-body-wrapper ends -->
         <!-- container-scroller -->
         <!-- plugins:js -->
@@ -690,73 +320,10 @@ $tasksResult = $stmt->get_result();
         <!-- Custom js for this page -->
         <script src="../../assets/js/chart.js"></script>
         <script src="../../assets/js/todolist.js"></script>
-        <script>
-          // JavaScript function to add a task to the project progression table
-          function addTask() {
-            // Get input values
-            var taskNumber = document.getElementById("taskNumber").value;
-            var taskStatus = document.getElementById("taskStatus").value;
-            var assignedTo = document.getElementById("assignedTo").value;
-            var taskPriority = document.getElementById("taskPriority").value;
-      
-            // Find the project progression table
-            var projectTable = document.querySelector(".project-progress-table tbody");
-      
-            // Create a new table row
-            var newRow = document.createElement("tr");
-      
-            // Populate the row with task information
-            newRow.innerHTML = `
-              <td>${taskNumber}</td>
-              <td>${taskStatus}</td>
-              <td>
-                <div class="progress">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-                </div>
-              </td>
-              <td>${taskPriority}</td>
-              <td>${assignedTo}</td>
-            `;
-      
-            // Append the new row to the table
-            projectTable.appendChild(newRow);
-      
-            // Reset form inputs
-            document.getElementById("taskNumber").value = "";
-            document.getElementById("taskStatus").value = "";
-            document.getElementById("assignedTo").value = "";
-            document.getElementById("taskPriority").value = "High";
-            
-          }
-        </script>
-        <script>
-          // JavaScript function to add a member to the project members table
-          function addMember() {
-            // Get input values
-            var memberName = document.getElementById("memberName").value;
-            var memberRole = document.getElementById("memberRole").value;
         
-            // Find the project members table
-            var membersTable = document.getElementById("membersTable").getElementsByTagName('tbody')[0];
-        
-            // Create a new table row
-            var newRow = document.createElement("tr");
-        
-            // Populate the row with member information
-            newRow.innerHTML = `
-              <td>${memberName}</td>
-              <td>${memberRole}</td>
-            `;
-        
-            // Append the new row to the table
-            membersTable.appendChild(newRow);
-        
-            // Reset form inputs
-            document.getElementById("memberName").value = "";
-            document.getElementById("memberRole").value = "";
-          }
-        </script>
-        <!-- End custom js for this page -->
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </body>
 
 </html>

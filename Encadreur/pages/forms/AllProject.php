@@ -1,3 +1,42 @@
+<?php
+
+$host = "localhost:3307";
+  $user = "root";
+  $password = "";
+  $database = "projetweb";
+
+  $link = new mysqli($host, $user, $password, $database);
+
+  // Check the connection
+  if ($link->connect_error) {
+    die("Connection failed: " . $link->connect_error);
+  }
+
+  // Récupérer le prénom et le nom de l'utilisateur connecté
+  session_start();
+  $email = $_SESSION['email'];
+
+  $stmt = $link->prepare("SELECT ID, Prenom, Nom FROM encadreurs WHERE AdresseEmail = ?");
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->bind_result($id, $prenom, $nom);
+  $stmt->fetch();
+  $stmt->close();
+
+
+  $stmt = $link->prepare("
+  SELECT p.ID, p.TitreProjet, p.DescriptionProjet
+  FROM projet p
+  WHERE p.EncadreurID = ?
+");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$stmt->close();
+
+?>
+
+
 <html>
     <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +88,8 @@
                   <span class="availability-status online"></span>
                 </div>
                 <div class="nav-profile-text">
-                  <p class="mb-1 text-black">David Greymaax</p>
-                </div>
+                <div class="nav-profile-text">
+                <p class="mb-1 text-black"><?php echo $nom . ' ' . $prenom; ?></p>                </div>                </div>
               </a>
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                 <a class="dropdown-item" href="#">
@@ -189,7 +228,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../dashboard.html">
+              <a class="nav-link" href="../../dashboard.php">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
@@ -209,7 +248,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../pages/tables/basic-table.html">
+              <a class="nav-link" href="../../pages/tables/basic-table.php">
                 <span class="menu-title">Condidate Viewing</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
               </a>
@@ -226,120 +265,63 @@
           </ul>
         </nav>
        <!-- partial -->
-       <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="page-header">
-           
-            <!-- Table displaying all projects -->
-            <div class="row">
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
               <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">My Projects</h4>
-                   
                     <div class="table-responsive">
                       <table class="table">
-                          <thead>
-                              <tr>
-                                  <th>Project Name</th>
-                                  <th>Description</th>
-                                  <th>Status</th>
-                                  <th>Created On</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <?php
-                          $servername = "localhost";
-                          $username = 'root';
-                         $port = 3307; // Port modifié à 3307
-                         $password = '';
-                         $database = 'web';
-
-// Créer la connexion
-                          $conn = new mysqli($servername, $username, $password, $database, $port);                  
-                              // Check the connection
-                              if ($conn->connect_error) {
-                                  die("Connection failed: " . $conn->connect_error);
-                              }
-                  
-                              // Run the query
-                              $sql = "SELECT * from projet";
-                              $result = $conn->query($sql);
-                  
-                              // Loop through the results
-                              if ($result->num_rows > 0) {
-                                  while($row = $result->fetch_assoc()) {
-                                      echo "<tr>";
-                                      echo "<td><a href='project1.php?id=" . $row["ID"] . "'>" . $row["TitreProjet"] . "</a></td>";
-                                      echo "<td>" . $row["DescriptionProjet"] . "</td>";
-                                      echo "</tr>";
-                                  }
-                              } else {
-                                  echo "0 results";
-                              }
-                  
-                              $conn->close();
-                              ?>
-                          </tbody>
+                        <thead>
+                          <tr>
+                            <th>Project Name</th>
+                            <th>Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php
+                          if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                              echo "<tr>";
+                              echo "<td><a href='project1.php?id=" . $row["ID"] . "'>" . $row["TitreProjet"] . "</a></td>";
+                              echo "<td>" . $row["DescriptionProjet"] . "</td>";
+                              echo "</tr>";
+                            }
+                          } else {
+                            echo "0 results";
+                          }
+                          ?>
+                        </tbody>
                       </table>
-                  </div>
-                  <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a Project</button>
-                  <div id="responseMessage"></div>
-
-  
-                      <div class="modal" id="addProjectModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">Add a Project</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <!-- Formulaire pour ajouter un sujet -->
-                              <form id="addProjectForm">
-                                <div class="mb-3">
-                                  <label for="topicTitle" class="form-label">Projet Title</label>
-                                  <input type="text" class="form-control" id="ProjectTitle" required>
-                                </div>
-                                <div class="mb-3">
-                                  <label for="ProjectDescription" class="form-label"> Description</label>
-                                  <textarea class="form-control" id="ProjectDescription" rows="3" required></textarea>
-                                </div>
-                                <button type="button" id="submitForm" class="btn btn-gradient-primary">Add Project</button>
-                              </form>
-                            </div>
-                            </div>
-                          </div>
-                        </div>
-                      
-                      <button class="btn btn-danger mb-2" id="deleteProjectBtn">Supprimer un Projet</button>
-
-                      <!-- Bouton "Add Project" en bas du tableau -->
-                      
-                  </div>
-                    
-                   
-                                          
-                      
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-           </div>
-         </div>
-        </div>
+                    <button id="openModalButton" class="btn btn-block btn-lg btn-gradient-primary mt-4">
+                      + Add a Project
+                    </button>
+
+                    <div id="addProjectModal" class="modal">
+                      <div class="modal-content">
+                        <span id="closeModalButton" class="close">&times;</span>
+                        <form id="addProjectForm">
+                          <div class="form-group">
+                            <label for="projectTitle">Project Title</label>
+                            <input type="text" id="projectTitle" name="TitreProjet" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="projectDescription">Project Description</label>
+                            <textarea id="projectDescription" name="DescriptionProjet" required></textarea>
+                          </div>
+                          <button type="submit">Add Project</button>
+                        </form>
+                      </div>
+                    </div>
+     
+           
        
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
-          <footer class="footer">
-            <div class="container-fluid d-flex justify-content-between">
-              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
-              <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
-            </div>
-          </footer>
+       
           <!-- partial -->
         </div>
         <!-- main-panel ends -->
@@ -356,87 +338,79 @@
     <!-- inject:js -->
     <script src="../../assets/js/off-canvas.js"></script>
     <script src="../../assets/js/hoverable-collapse.js"></script>
-    <script>
-      
-      $(document).ready(function() {
-        $("#submitForm").on("click", function() {
-          // Get form data
-          var ProjectTitle = $("#ProjectTitle").val();
-          var ProjectDescription = $("#ProjectDescription").val();
-    
-          // Create a data object to send to the server
-          var formData = {
-            title: ProjectTitle,
-            description: ProjectDescription
-          };
-    
-          // Use Ajax to send data to the PHP backend
-          $.ajax({
-            type: "POST",
-            url: "AddProject.php", // Replace with the actual path to your PHP script
-            data: formData,
-            success: function(response) {
-              // Update a specific element with the response message
-              $("#responseMessage").html(response);
-            },
-            error: function(error) {
-              // Handle errors if the request fails
-              console.log(error);
-            }
-          });
-        });
-      });
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  var modal = document.getElementById('addProjectModal');
+  var btn = document.getElementById("openModalButton");
+  var span = document.getElementById("closeModalButton");
 
-    </script>
-    <script>
-      // Attend que le document soit prêt
-      $(document).ready(function() {
-        // Gère le clic sur le bouton "+ Add a Project"
-        $('button.btn-gradient-primary').click(function() {
-          // Affiche la fenêtre modale pour ajouter un sujet
-          $('#addProjectModal').modal('show');
-        });
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
 
-        // Gère la soumission du formulaire
-        $('#addProjectForm').submit(function(event) {
-          // Empêche le comportement par défaut du formulaire (rechargement de la page)
-          event.preventDefault();
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
 
-          // Récupère les valeurs du formulaire
-          var ProjectTitle = $('#ProjectTitle').val();
-          var ProjectDescription = $('#ProjectDescription').val();
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
 
-          // Effectuez toute validation nécessaire ici
+  document.getElementById('addProjectForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-          // Ajoute le nouveau sujet au tableau
-          addProjectToTable(ProjectTitle, ProjectDescription);
+    var title = document.getElementById('projectTitle').value;
+    var description = document.getElementById('projectDescription').value;
 
-          // Réinitialise le formulaire
-          $('#addProjectForm')[0].reset();
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'add_project.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      if (this.status == 200) {
+        // Close the modal
+        modal.style.display = "none";
 
-          // Ferme la fenêtre modale
-          $('#addProjectModal').modal('hide');
-        });
+        // Reload the page to show the new project
+        location.reload();
+      } else {
+        console.error('Request failed.  Returned status of ' + this.status);
+      }
+    };
+    xhr.send('TitreProjet=' + title + '&DescriptionProjet=' + description);
+  });
+</script>
+<style>
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
 
-        // Fonction pour ajouter un nouveau sujet au tableau
-        function addProjectToTable(title, description) {
-          // Récupère le corps du tableau
-          var tableBody = $('.table tbody');
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%; /* Adjust this value to make the modal smaller or larger */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
 
-          // Crée une nouvelle ligne de tableau
-          var newRow = tableBody.append('<tr></tr>').children('tr:last');
+</style>
 
-          // Ajoute les cellules avec les détails du sujet
-          newRow.append('<td>' + title + '</td>');
-          newRow.append('<td>' + description + '</td>');
-          newRow.append('<td><label class="badge badge-gradient-success">New</label></td>');
-          newRow.append('<td>Now</td>');
-          newRow.append('<td>None yet</td>');
 
-          // Vous pouvez également effectuer des actions supplémentaires, telles que la mise à jour du serveur avec le nouveau sujet
-        }
-      });
-    </script>--!>
+
+ 
     
     <!-- End custom js for this page -->
   </body>

@@ -4,7 +4,7 @@ session_start();
 $host = "localhost:3307";
 $user = 'root';
 $pass = '';
-$db = 'web';
+$db = 'projetweb';
 
 $link = mysqli_connect($host, $user, $pass, $db);
 
@@ -55,14 +55,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-
+        
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
             if ($user['MotDePasse'] === $password) {
                 // Encadreur login successful
                 $_SESSION['email'] = $email;
-                $_SESSION['encadreur'] = true; // Set a session variable to indicate that this is an encadreur
+                $_SESSION['encadreur'] = true;
                 echo "success-encadreur";
+                // Set a session variable to indicate that this is an encadreur
                 exit();
             }
         }
